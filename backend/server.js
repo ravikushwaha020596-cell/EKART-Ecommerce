@@ -7,15 +7,18 @@ import productRoute from "./routes/productRoute.js";
 import cartRoute from "./routes/cartRoute.js";
 import orderRoute from "./routes/orderRoute.js"
 dotenv.config();
-
 const app = express();
 
 app.use(express.json());
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://e-commerce-zeta-neon-40.vercel.app"
+    ],
     credentials: true,
-  }),
+  })
 );
 
 app.use("/api/v1/user", userRoute);

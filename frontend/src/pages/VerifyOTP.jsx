@@ -27,8 +27,8 @@ const VerifyOTP = () => {
     console.log("Sending OTP:", { email, otp });
 
     try {
-      const res = await axios.post(
-  `http://localhost:8000/api/v1/user/verify-otp/${encodeURIComponent(email)}`,
+     const res = await axios.post(
+  `${import.meta.env.VITE_URL}/api/v1/user/verify-otp/${encodeURIComponent(email)}`,
   { otp }
 );
       console.log("OTP Response:", res.data);

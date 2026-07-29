@@ -14,10 +14,10 @@ const ForgotPassword = () => {
     console.log("Submitting email:", email);
 
     try {
-      const res = await axios.post(
-        `http://localhost:8000/api/v1/user/forgot-password`,
-        { email }
-      );
+  const res = await axios.post(
+    `${import.meta.env.VITE_URL}/api/v1/user/forgot-password`,
+    { email }
+  );
       console.log("Response:", res.data);
 
       if (res.data.success) {

@@ -27,9 +27,9 @@ const ResetPassword = () => {
   e.preventDefault();
   try {
     const res = await axios.post(
-      `http://localhost:8000/api/v1/user/change-password/${email}`,
-      { newPassword: password, confirmPassword: password }
-    );
+  `${import.meta.env.VITE_URL}/api/v1/user/change-password/${email}`,
+  { newPassword: password, confirmPassword: password }
+);
     if (res.data.success) {
       toast.success("Password reset successfully!");
       navigate("/login");

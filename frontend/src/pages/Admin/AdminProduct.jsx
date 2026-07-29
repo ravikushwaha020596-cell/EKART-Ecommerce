@@ -103,8 +103,8 @@ const AdminProduct = () => {
 
     try {
       const res = await axios.put(
-        `http://localhost:8000/api/v1/product/update/${editProducts._id}`,
-        formData,
+  `${import.meta.env.VITE_URL}/api/v1/product/update/${editProducts._id}`,
+  formData,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -130,8 +130,8 @@ const AdminProduct = () => {
         (products) => products._id !== productId,
       );
       const res = await axios.delete(
-        `http://localhost:8000/api/v1/product/delete/${productId}`,
-        {
+  `${import.meta.env.VITE_URL}/api/v1/product/delete/${productId}`,
+  {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

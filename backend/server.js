@@ -15,7 +15,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://e-commerce-zeta-neon-40.vercel.app"
+      "https://e-commerce-qyhn.vercel.app"
     ],
     credentials: true,
   })

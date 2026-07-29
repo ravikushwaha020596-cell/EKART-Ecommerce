@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setCart } from "@/redux/productSlice";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 const Cart = () => {
   const { cart } = useSelector((store) => store.products);

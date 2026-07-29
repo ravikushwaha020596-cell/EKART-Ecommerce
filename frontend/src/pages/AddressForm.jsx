@@ -13,7 +13,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 const AddressForm = () => {
   const [formData, setFormData] = useState({

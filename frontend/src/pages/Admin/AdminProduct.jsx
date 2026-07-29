@@ -27,7 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import ImageUpload from "@/components/ImageUpload";
 import { useState } from "react";
 import axios from "axios";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 import { setProducts } from "@/redux/productSlice";
 import { useSelector, useDispatch } from "react-redux";
 import {

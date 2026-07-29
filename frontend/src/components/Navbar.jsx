@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import axios from "axios";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/redux/userSlice";
 
@@ -21,9 +21,9 @@ const Navbar = () => {
   const logoutHandler = async () => {
     try {
       const res = await axios.post(
-  `${import.meta.env.VITE_URL}/api/v1/user/logout`,
+        `${import.meta.env.VITE_URL}/api/v1/user/logout`,
         {},
-        { headers: { Authorization: `Bearer ${accessToken}` } }
+        { headers: { Authorization: `Bearer ${accessToken}` } },
       );
       if (res.data.success) {
         dispatch(setUser(null));
@@ -39,15 +39,18 @@ const Navbar = () => {
   return (
     <header className="fixed top-0 left-0 w-full h-16 bg-pink-50 z-50 border-b border-pink-200">
       <div className="max-w-7xl mx-auto flex justify-between items-center h-full px-4">
-        
         {/* Logo */}
         <img src="/Ekart.png" alt="logo" className="w-24" />
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex gap-8 items-center">
           <ul className="flex gap-6 items-center text-lg font-semibold">
-            <Link to="/"><li>Home</li></Link>
-            <Link to="/products"><li>Product</li></Link>
+            <Link to="/">
+              <li>Home</li>
+            </Link>
+            <Link to="/products">
+              <li>Product</li>
+            </Link>
 
             {user && (
               <Link to={`/profile/${user._id}`}>
@@ -95,8 +98,12 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {open && (
         <div className="md:hidden bg-white shadow-lg px-6 py-4 flex flex-col gap-4">
-          <Link to="/" onClick={() => setOpen(false)}>Home</Link>
-          <Link to="/products" onClick={() => setOpen(false)}>Product</Link>
+          <Link to="/" onClick={() => setOpen(false)}>
+            Home
+          </Link>
+          <Link to="/products" onClick={() => setOpen(false)}>
+            Product
+          </Link>
 
           {user && (
             <Link to={`/profile/${user._id}`} onClick={() => setOpen(false)}>

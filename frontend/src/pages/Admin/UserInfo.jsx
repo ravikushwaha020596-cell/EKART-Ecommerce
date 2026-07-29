@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import {useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setUser } from "@/redux/userSlice";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 

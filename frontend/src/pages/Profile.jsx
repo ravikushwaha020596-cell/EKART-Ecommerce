@@ -15,7 +15,7 @@ import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/tabs";
 import { useDispatch, useSelector } from "react-redux";
 import userLogo from "../assets/user.jpg";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 import axios from "axios";
 import { setUser } from "@/redux/userSlice";
 import MyOrder from "./MyOrder";

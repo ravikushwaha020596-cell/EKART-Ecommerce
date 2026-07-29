@@ -2,7 +2,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import axios from "axios";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setCart } from "@/redux/productSlice";
 

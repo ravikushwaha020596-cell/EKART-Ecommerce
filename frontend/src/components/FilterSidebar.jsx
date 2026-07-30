@@ -127,7 +127,7 @@ const FilterSidebar = ({
                   <input
                     type="number"
                     value={priceRange[0]}
-                    onChange={hamdleMinChange}
+                    onChange={handleMinChange}
                     className="w-28 p-1 border rounded"
                   />
                   <span>-</span>
@@ -151,7 +151,7 @@ const FilterSidebar = ({
                   min="0"
                   max="999999"
                   value={priceRange[1]}
-                  onChange={hamdleMaxChange}
+                  onChange={handleMaxChange}
                 />
               </div>
 

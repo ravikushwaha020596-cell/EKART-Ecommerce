@@ -17,22 +17,53 @@ const orderSchema = new mongoose.Schema(
         quantity: {
           type: Number,
           required: true,
+          min: 1,
         },
       },
     ],
-    amount: { type: Number, required: true },
-    tax: { type: Number, required: true },
-    shipping: { type: Number, required: true },
-    currency: { type:String, default: "INR" },
+    amount: {
+       type: Number,
+        required: true,
+         min: 0 
+     },
+    tax: {
+       type: Number,
+        required: true,
+        default: 0 ,
+         min: 0,
+        },
+
+    shipping: {
+       type: Number, 
+       required: true,
+        default: 0,
+         min: 0,
+      },
+
+    currency: { 
+      type: String,
+       default: "INR",
+       trim: true,
+      },
+
     status: {
       type: String,
       enum: ["Pending", "Paid", "Failed"],
       default: "Pending",
     },
     // Razorpay fields
-    razorpayOrderId: { type: String },
-    razorpayPaymentId: { type: String },
-    razorpaySignature: { type: String },
+    razorpayOrderId: {
+       type: String ,
+       default: null,
+      },
+    razorpayPaymentId: {
+       type: String ,
+        default: null,
+      },
+    razorpaySignature: {
+       type: String,
+        default: null,
+   },
   },
   { timestamps: true },
 );

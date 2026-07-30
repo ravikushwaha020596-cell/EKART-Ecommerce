@@ -4,6 +4,10 @@ import "react-medium-image-zoom/dist/styles.css";
 
 const ProductImg = ({ productImage }) => {
   const [mainImg, setMainImg] = useState(productImage?.[0]?.URL);
+  useEffect(() => {
+    setMainImg(productImage?.[0]?.URL);
+  }, [productImage]);
+
 
   return (
     <div className="flex flex-col md:flex-row gap-4 w-full">
@@ -14,7 +18,7 @@ const ProductImg = ({ productImage }) => {
           <img
             key={index}
             src={image.URL}
-            alt=""
+            alt={`Product image ${index + 1}`}
             onClick={() => setMainImg(image.URL)}
             className="cursor-pointer w-16 h-16 sm:w-20 sm:h-20 border shadow-md object-cover rounded-md shrink-0"
           />
@@ -26,7 +30,7 @@ const ProductImg = ({ productImage }) => {
         <Zoom>
           <img
             src={mainImg}
-            alt=""
+            alt="Product"
             className="w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] border shadow-lg object-cover rounded-md"
           />
         </Zoom>

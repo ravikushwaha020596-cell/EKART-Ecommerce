@@ -40,7 +40,7 @@ const Navbar = () => {
     <header className="fixed top-0 left-0 w-full h-16 bg-pink-50 z-50 border-b border-pink-200">
       <div className="max-w-7xl mx-auto flex justify-between items-center h-full px-4">
         {/* Logo */}
-        <img src="/Ekart.png" alt="logo" className="w-24" />
+        <img src="/Ekart.png" alt="Ekart Logo" className="w-24" />
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex gap-8 items-center">

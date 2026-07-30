@@ -16,7 +16,7 @@ const Features = () => {
                 Free shipping
               </h3>
               <p className="text-xs sm:text-sm text-muted-foreground">
-                On orders over $50
+                Free delivery on orders above ₹500
               </p>
             </div>
           </div>

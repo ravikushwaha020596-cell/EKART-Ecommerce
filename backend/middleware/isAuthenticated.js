@@ -7,7 +7,7 @@ export const isAuthenticated = async (req, res, next) => {
 
     // Token check
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
         message: "Authorization token is missing or invalid",
       });
@@ -21,13 +21,13 @@ export const isAuthenticated = async (req, res, next) => {
       decoded = jwt.verify(token, process.env.SECRET_KEY);
     } catch (error) {
       if (error.name === "TokenExpiredError") {
-        return res.status(400).json({
+        return res.status(401).json({
           success: false,
           message: "Access token has expired",
         });
       }
 
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
         message: "Access token is invalid",
       });
@@ -35,19 +35,21 @@ export const isAuthenticated = async (req, res, next) => {
  // Find user
     const user = await User.findById(decoded.id);
     if (!user) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
         message: "User not found",
       });
     }
     req.user = user;
-    req.id = user.id;
+    req.id = user._id;
+    return next();
 
-    next();
   } catch (error) {
+    console.error("Authentication Error:", error);
+
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Internal Server Error",
     });
   }
 };
@@ -55,10 +57,13 @@ export const isAuthenticated = async (req, res, next) => {
 
 export const isAdmin = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
-    next();
-  } else {
+    return next();
+  } 
+
+
     return res.status(403).json({
+      success: false,
       message: "Access denied: admin only",
     });
-  }
+  
 };

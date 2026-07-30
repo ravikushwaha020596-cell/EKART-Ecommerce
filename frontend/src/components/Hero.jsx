@@ -1,7 +1,11 @@
 import React from "react";
 import { Button } from "./ui/button";
+import {useNavigate} from "react-router-dom";
+
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="pt-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-10 md:py-16">
       <div className="max-w-7xl mx-auto px-4">
@@ -18,7 +22,8 @@ const Hero = () => {
             </p>
 
             <div className="flex flex-row gap-4 justify-center md:justify-start">
-              <Button className="bg-white text-blue-600 hover:bg-gray-200 w-auto">
+              <Button className="bg-white text-blue-600 hover:bg-gray-200 w-auto"
+                onClick={()=>navigate("/products")}>
                 Shop Now
               </Button>
 

@@ -9,17 +9,18 @@ import { setCart } from "@/redux/productSlice";
 const ProductDesc = ({ product }) => {
   const accessToken = localStorage.getItem("accessToken");
   const dispatch = useDispatch();
+  const [quantity, setQuantity] = useState(1);
 
   const addToCard = async (productId) => {
     try {
       const res = await axios.post(
-  `${import.meta.env.VITE_URL}/api/v1/cart/add`,
-  { productId },
+        `${import.meta.env.VITE_URL}/api/v1/cart/add`,
+        { productId },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        }
+        },
       );
       if (res.data.success) {
         toast.success("product added to cart");
@@ -32,7 +33,6 @@ const ProductDesc = ({ product }) => {
 
   return (
     <div className="flex flex-col gap-4 w-full">
-      
       {/* Title */}
       <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl text-gray-800">
         {product.productName}
@@ -60,9 +60,8 @@ const ProductDesc = ({ product }) => {
         </p>
         <Input
           type="number"
-          className="w-16"
-          defaultValue={1}
-          min={1}
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
         />
       </div>
 
@@ -73,7 +72,6 @@ const ProductDesc = ({ product }) => {
       >
         Add to Cart
       </Button>
-
     </div>
   );
 };

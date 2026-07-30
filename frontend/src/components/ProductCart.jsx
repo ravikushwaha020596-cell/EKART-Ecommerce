@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { ShoppingCart } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
@@ -13,11 +13,22 @@ const ProductCart = ({ product, loading }) => {
   const accessToken = localStorage.getItem("accessToken");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [cartLoading, setCartLoading] = useState(false);
+
   const addToCart = async (productId) => {
+
+ if (!accessToken) {
+      toast.error("Please login first");
+      navigate("/login");
+      return;
+    }
+
     try {
+      setCartLoading(true);
+
       const res = await axios.post(
-  `${import.meta.env.VITE_URL}/api/v1/cart/add`,
-  { productId },
+        `${import.meta.env.VITE_URL}/api/v1/cart/add`,
+        { productId },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -30,6 +41,14 @@ const ProductCart = ({ product, loading }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error(
+        error.response?.data?.message || "Failed to add product"
+      );
+
+    } finally {
+
+      setCartLoading(false);
+
     }
   };
 
@@ -41,7 +60,7 @@ const ProductCart = ({ product, loading }) => {
         ) : (
           <img
             onClick={() => navigate(`/products/${product._id}`)}
-            src={productImage?.[0]?.URL}
+            src={productImage?.[0]?.URL || "/placeholder.png"}
             alt=""
             className="w-full h-full transition-transform duration-300 hover:scale-105"
           />
@@ -58,11 +77,15 @@ const ProductCart = ({ product, loading }) => {
           <h1 className="font-semibold h-12 line-clamp-2">{productName}</h1>
           <h2 className="font-bold">₹ {productPrice}</h2>
           <Button
+          disabled={cartLoading}
             onClick={() => addToCart(product._id)}
             className="bg-pink-600 mb-3 w-full"
           >
             <ShoppingCart />
-            Add to Cart
+            {cartLoading 
+              ? "Adding..."
+              : "Add to Cart"
+            }
           </Button>
         </div>
       )}

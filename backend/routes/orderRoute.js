@@ -1,15 +1,22 @@
-import express from "express"
-import {isAdmin, isAuthenticated} from "../middleware/isAuthenticated.js"
-import {createOrder, getAllOrdersAdmin, getMyOrder, getSalesData, getUserOrders, VerifyPayment} from "../controllers/orderController.js"
+import express from "express";
+import {
+  createOrder,
+  VerifyPayment,
+  getMyOrder,
+  getAllOrdersAdmin,
+  getUserOrders,
+  getSalesData,
+} from "../controllers/orderController.js";
+import { isAdmin, isAuthenticated } from "../middleware/isAuthenticated.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.post("/create-order", isAuthenticated, createOrder)
+router.post("/create-order", isAuthenticated, createOrder);
 
-router.post("/verify-payment", isAuthenticated, VerifyPayment)
-router.get("/myorder", isAuthenticated, getMyOrder)
-router.get("/all", isAuthenticated, isAdmin, getAllOrdersAdmin)
-router.get("/user-order/:userId", isAuthenticated,isAdmin, getUserOrders)
-router.get("/sales", isAuthenticated,isAdmin, getSalesData)
+router.post("/verify-payment", isAuthenticated, VerifyPayment);
+router.get("/myorder", isAuthenticated, getMyOrder);
+router.get("/all", isAuthenticated, isAdmin, getAllOrdersAdmin);
+router.get("/user-order/:userId", isAuthenticated, isAdmin, getUserOrders);
+router.get("/sales", isAuthenticated, isAdmin, getSalesData);
 
-export default router
+export default router;

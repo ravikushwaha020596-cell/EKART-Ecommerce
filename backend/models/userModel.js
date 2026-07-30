@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       select: false,
+      minlength: 6,
     },
     role: {
       type: String,
@@ -37,30 +38,48 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    token: {
+      type: String,
+      default: null,
+    },
+
     otp: {
       type: String,
     },
     otpExpiry: {
       type: Date,
+      default: null,
     },
 
     address: {
       type: String,
+      trim: true,
+      default: "",
     },
     city: {
       type: String,
+      trim: true,
+      default: "",
     },
     zipCode: {
       type: String,
+      trim: true,
+      default: "",
     },
     phoneNo: {
       type: String,
+      trim: true,
+      default: "",
     },
     profilePic: {
       type: String,
+      trim: true,
+      default: "",
     },
     profilePicPublicId: {
       type: String,
+      default: "",
     },
   },
   { timestamps: true },

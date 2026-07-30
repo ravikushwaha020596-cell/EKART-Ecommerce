@@ -1,13 +1,14 @@
 {
   "name": "ekard-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "MERN E-Commerce Backend API",
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

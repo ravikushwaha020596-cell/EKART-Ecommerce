@@ -1,5 +1,5 @@
 import { Label } from "@/components/ui/label";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
@@ -60,7 +60,7 @@ const ImageUpload = ({ productData, setProductData }) => {
                 <CardContent>
                   <img
                     src={preview}
-                    alt=""
+                    alt="Product Preview"
                     width={200}
                     height={200}
                     className="w-full h-32 object-cover rounded-md"

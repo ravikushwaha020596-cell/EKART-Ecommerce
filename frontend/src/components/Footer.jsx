@@ -24,11 +24,11 @@ const Footer = () => {
           </p>
 
           <p className="mt-2 text-sm">
-            123 Electronics St, Style City, NY 10001
+            181229 Electronics City-Indore, india
           </p>
 
           <p className="text-sm break-words">
-            Email: Support@Zaptro.com
+            Email:support@ekart.com
           </p>
         </div>
 

@@ -6,17 +6,19 @@ import cors from "cors";
 import productRoute from "./routes/productRoute.js";
 import cartRoute from "./routes/cartRoute.js";
 import orderRoute from "./routes/orderRoute.js"
+
+
 dotenv.config();
 const app = express();
+connectDB();
+
+
 
 app.use(express.json());
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://e-commerce-qyhn.vercel.app"
-    ],
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
@@ -26,10 +28,18 @@ app.use("/api/v1/product", productRoute);
 app.use("/api/v1/cart", cartRoute);
 app.use("/api/v1/orders", orderRoute);
 
-connectDB();
 
-const PORT = process.env.PORT || 3000;
+
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "Ekart Backend API is Running",
+  });
+});
+
+const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
-  console.log(` Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
+

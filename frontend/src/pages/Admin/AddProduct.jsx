@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import ImageUpload from "@/components/ImageUpload";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +15,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { setProducts } from "@/redux/productSlice";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
-import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -34,11 +34,15 @@ const AddProduct = () => {
     brand: "",
     category: "",
   });
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProductData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === "productPrice"
+        ? Number(value)
+        : value,
     }));
   };
 
@@ -175,7 +179,7 @@ const AddProduct = () => {
               disabled={loading}
               onClick={submitHandler}
               className="w-full mt-6 bg-pink-600 cursor-pointer"
-              type="submit"
+              type="button"
             >
               {loading ? (
                 <span className="flex gap-1 items-center">

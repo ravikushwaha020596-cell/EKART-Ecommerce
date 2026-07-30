@@ -185,7 +185,7 @@ const AdminProduct = () => {
 
       {filteredProducts.map((product, index) => {
         return (
-          <Card key={index} className="p-3 sm:p-4">
+          <Card key={product._id} className="p-3 sm:p-4">
             <div
               className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between"
             >
@@ -308,8 +308,8 @@ const AdminProduct = () => {
                         Are you absolutely sure?
                       </AlertDialogTitle>
                       <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your account from our servers.
+                        This action cannot be undone. 
+                        This will permanently delete this product.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

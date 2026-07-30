@@ -26,6 +26,9 @@ const Navbar = () => {
         { headers: { Authorization: `Bearer ${accessToken}` } },
       );
       if (res.data.success) {
+        localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+
         dispatch(setUser(null));
         toast.success(res.data.message);
         navigate("/login");

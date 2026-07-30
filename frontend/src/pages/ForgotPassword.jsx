@@ -23,7 +23,7 @@ const ForgotPassword = () => {
       if (res.data.success) {
         toast.success("OTP sent to your email!");
         // Pass email via query param (safer than state)
-        navigate(`/verify-otp?email=${email}`);
+        navigate(`/verify-otp?email=${encodeURIComponent(email)}`);
       }
     } catch (err) {
       console.log("Error:", err.response);

@@ -13,7 +13,6 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "@/redux/productSlice";
-import { setCart } from "@/redux/productSlice";
 
 const Products = () => {
   const { products } = useSelector((state) => state.products);
@@ -40,7 +39,7 @@ const Products = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to fetch products");
     } finally {
       setLoading(false);
     }

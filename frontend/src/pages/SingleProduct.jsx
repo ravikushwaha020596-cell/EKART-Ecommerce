@@ -10,15 +10,22 @@ const SingleProduct = () => {
   const ProductId = params.id;
 
   const { products } = useSelector((store) => store.products);
+const product = products?.find((item) => item._id === ProductId);
 
-  const product = products.find((item) => item._id === ProductId);
+if (!product) {
+  return (
+    <div className="pt-20 text-center">
+      Loading...
+    </div>
+  );
+}
 
   return (
     <div className="pt-20 py-10 max-w-7xl mx-auto">
       <Breadcrums product={product}/>
       
       <div className="mt-10 grid grid-cols-2 items-start">
-        <ProductImg  productImage={product?.productImage}/>
+        <ProductImg  productImage={product.productImage}/>
         <ProductDesc product={product} />
       </div>
     </div>

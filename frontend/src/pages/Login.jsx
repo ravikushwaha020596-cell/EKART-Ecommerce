@@ -57,7 +57,7 @@ const Login = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message);
+     toast.error(error.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -130,7 +130,7 @@ const Login = () => {
         <CardFooter className="flex-col gap-2">
           <Button
             onClick={submitHandler}
-            type="submit"
+            type="button"
             className="w-full cursor-pointer bg-pink-600  hover:bg-pink-500"
           >
             {loading ? (

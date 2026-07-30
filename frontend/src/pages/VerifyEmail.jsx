@@ -26,12 +26,12 @@ const VerifyEmail = () => {
       }
     } catch (error) {
       console.log(error);
-      setStatus(" ❌ Verification failed. please try again");
+      setStatus(" ❌ Verification failed. Please try again");
     }
   };
   useEffect(() => {
     verifyEmail();
-  }, [token]);
+  }, []);
   return (
     <div className="relative w-full h-[760px] bg-pink-100 overflow-hidden">
       <div className="min-h-screen flex items-center justify-center">

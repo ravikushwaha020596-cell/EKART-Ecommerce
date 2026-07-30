@@ -6,7 +6,6 @@ const productSlice = createSlice({
   initialState: {
     products: [],
     cart: [],
-     items: [],
      addresses:[],
      selectedAddress:null    //currenly chosen address
    
@@ -28,14 +27,17 @@ const productSlice = createSlice({
         setSelectedAddress:(state, action)=>{
           state.selectedAddress = action.payload
         },
-        deleteAddress:(state, action)=>{
-          state.addresses = state.addresses.filter((_, index)=>index !== action.payload)
+        deleteAddress: (state, action) => {
+  const deletedAddress = state.addresses[action.payload];
 
-          // Reset selectedAddress if it was deleted
-          if(state.selectedAddress === action.payload){
-            state.selectedAddress = null
-          }
-        }
+  state.addresses = state.addresses.filter(
+    (_, index) => index !== action.payload
+  );
+
+  if (state.selectedAddress === deletedAddress) {
+    state.selectedAddress = null;
+  }
+}
       }
 });
 

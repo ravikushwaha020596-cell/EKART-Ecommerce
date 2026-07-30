@@ -12,10 +12,10 @@ const ResetPassword = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // 🔹 Email from query parameter
+  // Email from query parameter
   const email = searchParams.get("email") || "";
 
-  // 🔹 Redirect if email missing
+  //  Redirect if email missing
   useEffect(() => {
     if (!email) {
       toast.error("Email not found. Please verify OTP first.");

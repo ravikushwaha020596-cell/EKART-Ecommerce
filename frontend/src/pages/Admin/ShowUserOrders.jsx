@@ -2,6 +2,7 @@ import OrderCard from "@/components/OrderCard";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const ShowUserOrders = () => {
   const params = useParams();
@@ -9,6 +10,7 @@ const ShowUserOrders = () => {
   const [userOrder, setUserOrder] = useState(null);
   const getUserOrders = async () => {
     const accessToken = localStorage.getItem("accessToken");
+    try {
     const res = await axios.get(
       `${import.meta.env.VITE_URL}/api/v1/orders/user-order/${params.userId}`,
       {
@@ -17,19 +19,25 @@ const ShowUserOrders = () => {
         },
       },
     );
+
     if (res.data.success) {
       setUserOrder(res.data.orders);
     }
-  };
+  }
+  catch (error) {
+    console.log(error);
+    toast.error(error.response?.data?.message || "Failed to fetch user orders");
+  }
+};
   useEffect(() => {
     getUserOrders();
-  }, []);
+  }, [params.userId]);
 
   return (
     <>
       <OrderCard userOrder={userOrder} />
     </>
   );
-};
+  };
 
 export default ShowUserOrders;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import axios from "axios";
@@ -6,30 +6,47 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setCart } from "@/redux/productSlice";
 
+
 const ProductDesc = ({ product }) => {
   const accessToken = localStorage.getItem("accessToken");
   const dispatch = useDispatch();
+
   const [quantity, setQuantity] = useState(1);
 
-  const addToCard = async (productId) => {
+  const addToCart = async (productId) => {
+    if (!accessToken) {
+      toast.error("Please login first");
+      return;
+    }
+
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_URL}/api/v1/cart/add`,
-        { productId },
+        {
+          productId,
+          quantity: Number(quantity),
+        },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        },
+        }
       );
+
       if (res.data.success) {
-        toast.success("product added to cart");
+        toast.success("Product added to cart");
         dispatch(setCart(res.data.cart));
       }
+
     } catch (error) {
       console.log(error);
+      toast.error(
+        error.response?.data?.message || "Failed to add cart"
+      );
     }
   };
+
+
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -60,6 +77,7 @@ const ProductDesc = ({ product }) => {
         </p>
         <Input
           type="number"
+           min="1"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
         />
@@ -67,7 +85,7 @@ const ProductDesc = ({ product }) => {
 
       {/* Button */}
       <Button
-        onClick={() => addToCard(product._id)}
+        onClick={() => addToCart(product._id)}
         className="bg-pink-600 w-full sm:w-fit"
       >
         Add to Cart

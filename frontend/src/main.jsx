@@ -10,12 +10,13 @@ import store from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 
-let persistore = persistStore(store);
+
+const persistor = persistStore(store);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistore}>
+      <PersistGate loading={null} persistor={persistor}>
         <App />
 
         <Toaster

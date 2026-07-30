@@ -1,4 +1,3 @@
-import Products from "@/pages/Products";
 import userSlice from "./userSlice";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import {

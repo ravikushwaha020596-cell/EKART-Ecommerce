@@ -103,56 +103,94 @@ const AddressForm = () => {
         },
         theme: { color: "#F472B6" },
       };
-
+      if (!window.Razorpay) {
+        return toast.error("Razorpay SDK not loaded");
+      }
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (error) {
-      toast.error("Payment failed");
+      toast.error(error.response?.data?.message || "Payment failed");
     }
   };
 
   return (
-      <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-10 py-6 mt-16 md:mt-20">
-      
+    <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-10 py-6 mt-16 md:mt-20">
       {/* GRID RESPONSIVE */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
-
         {/* LEFT SIDE */}
         <div className="space-y-4 p-4 sm:p-6 bg-white rounded-lg shadow-sm">
-
           {showForm ? (
             <>
               <div>
                 <Label>Full Name</Label>
-                <Input name="fullName" value={formData.fullName} onChange={handleChange} />
+                <Input
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                />
               </div>
 
               <div>
                 <Label>Phone</Label>
-                <Input name="phone" value={formData.phone} onChange={handleChange} />
+                <Input
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                />
               </div>
 
               <div>
                 <Label>Email</Label>
-                <Input name="email" value={formData.email} onChange={handleChange} />
+                <Input
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
               </div>
 
               <div>
                 <Label>Address</Label>
-                <Input name="address" value={formData.address} onChange={handleChange} />
+                <Input
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <Input name="city" placeholder="City" value={formData.city} onChange={handleChange} />
-                <Input name="state" placeholder="State" value={formData.state} onChange={handleChange} />
+                <Input
+                  name="city"
+                  placeholder="City"
+                  value={formData.city}
+                  onChange={handleChange}
+                />
+                <Input
+                  name="state"
+                  placeholder="State"
+                  value={formData.state}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <Input name="zip" placeholder="Zip" value={formData.zip} onChange={handleChange} />
-                <Input name="country" placeholder="Country" value={formData.country} onChange={handleChange} />
+                <Input
+                  name="zip"
+                  placeholder="Zip"
+                  value={formData.zip}
+                  onChange={handleChange}
+                />
+                <Input
+                  name="country"
+                  placeholder="Country"
+                  value={formData.country}
+                  onChange={handleChange}
+                />
               </div>
 
-              <Button onClick={handleSave} className="w-full bg-pink-600 text-sm sm:text-base w-full">
+              <Button
+                onClick={handleSave}
+                className="w-full bg-pink-600 text-sm sm:text-base w-full"
+              >
                 Save & Continue
               </Button>
             </>
@@ -241,7 +279,6 @@ const AddressForm = () => {
             </CardContent>
           </Card>
         </div>
-
       </div>
     </div>
   );

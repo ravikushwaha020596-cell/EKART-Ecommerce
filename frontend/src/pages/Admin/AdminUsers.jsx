@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import UserLogo from "../../assets/user.jpg";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -15,8 +16,8 @@ const AdminUsers = () => {
     const accessToken = localStorage.getItem("accessToken");
     try {
       const res = await axios.get(
-  `${import.meta.env.VITE_URL}/api/v1/user/all-user`,
-  {
+        `${import.meta.env.VITE_URL}/api/v1/user/all-user`,
+        {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -27,6 +28,7 @@ const AdminUsers = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.response?.data?.message || "Failed to fetch users");
     }
   };
   const filteredUsers = users.filter(
@@ -43,7 +45,8 @@ const AdminUsers = () => {
 
   return (
     <div
-      className="min-h-screen bg-gray-100 px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-10 ml-0 md:ml-60 lg:ml-70 mt-20 md:mt-12"
+      className="min-h-screen bg-gray-100 px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-10 ml-0 md:ml-[240px]
+                 lg:ml-[280px] mt-20 md:mt-12"
     >
       <h1 className="font-bold text-xl sm:text-2xl md:text-3xl">
         User Management

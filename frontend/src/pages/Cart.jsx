@@ -13,18 +13,17 @@ import toast from "react-hot-toast";
 
 const Cart = () => {
   const { cart } = useSelector((store) => store.products);
-  const subtotal = cart?.totalPrice;
+  const subtotal = cart?.totalPrice || 0;
   const shipping = subtotal > 299 ? 0 : 10;
-  const tax = subtotal * 0.05;
-  const total = subtotal + shipping + tax;
-
+  const tax = Number((subtotal * 0.05).toFixed(2));
+  const total = Number((subtotal + shipping + tax).toFixed(2));
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const API = `${import.meta.env.VITE_URL}/api/v1/cart`;
   const accessToken = localStorage.getItem("accessToken");
 
-  const loadCard = async () => {
+  const loadCart = async () => {
     try {
       const res = await axios.get(API, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -34,6 +33,7 @@ const Cart = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.response?.data?.message || "Failed to load cart");
     }
   };
 
@@ -49,6 +49,7 @@ const Cart = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.response?.data?.message || "Failed to update cart");
     }
   };
 
@@ -64,11 +65,12 @@ const Cart = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.response?.data?.message || "Failed to remove product");
     }
   };
 
   useEffect(() => {
-    loadCard();
+    loadCart();
   }, [dispatch]);
 
   return (
@@ -84,13 +86,14 @@ const Cart = () => {
             {/* LEFT SIDE */}
             <div className="flex flex-col gap-4 sm:gap-5 flex-1">
               {cart.items.map((product, index) => (
-                <Card key={index}>
+                <Card key={product.productId?._id || index}>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-3 sm:pr-7">
                     
                     {/* IMAGE + NAME */}
                     <div className="flex items-center gap-3 w-full sm:w-[350px]">
                       <img
                         src={product?.productId?.productImage?.[0]?.URL || userLogo}
+                        alt={product?.productId?.productName}
                         className="w-20 h-20 sm:w-24 sm:h-24 object-cover"
                       />
                       <div className="w-full">

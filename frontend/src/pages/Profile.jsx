@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { setUser } from "@/redux/userSlice";
 import MyOrder from "./MyOrder";
-import { Eye, EyeOff } from "lucide-react"; 
+import { Eye, EyeOff } from "lucide-react";
 
 const Profile = () => {
   const { user } = useSelector((store) => store.user);
@@ -37,7 +37,7 @@ const Profile = () => {
     role: user?.role,
   });
 
-  const [file, setFile] = useState([]);
+  const [file, setFile] = useState(null);
   const dispatch = useDispatch();
   const [passwordData, setPasswordData] = useState({
     oldPassword: "",
@@ -60,11 +60,12 @@ const Profile = () => {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
     setFile(selectedFile);
-    setUpdateUser({
-      ...updateUser,
+    setUpdateUser((prev) => ({
+      ...prev,
       profilePic: URL.createObjectURL(selectedFile), //preview only
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -85,9 +86,9 @@ const Profile = () => {
         formData.append("file", file); //image file or backend multer
       }
       const res = await axios.put(
-  `${import.meta.env.VITE_URL}/api/v1/user/update/${userId}`,
-  formData,
-  {
+        `${import.meta.env.VITE_URL}/api/v1/user/update/${userId}`,
+        formData,
+        {
           headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "multipart/form-data",
@@ -95,17 +96,17 @@ const Profile = () => {
         },
       );
       if (res.data.success) {
-        toast.success(res.data.message);
         dispatch(setUser(res.data.user));
+  setUpdateUser(res.data.user);
+  toast.success(res.data.message);
       }
     } catch (error) {
       console.log(error);
-      toast.error("Failed to update profile");
+      toast.error(error.response?.data?.message || "Failed to update profile");
     }
   };
 
-
-    const handlePasswordInput = (e) => {
+  const handlePasswordInput = (e) => {
     setPasswordData({
       ...passwordData,
       [e.target.name]: e.target.value,
@@ -123,13 +124,13 @@ const Profile = () => {
       const accessToken = localStorage.getItem("accessToken");
 
       const res = await axios.put(
-  `${import.meta.env.VITE_URL}/api/v1/user/change-password`,
-  passwordData,
-  {
+        `${import.meta.env.VITE_URL}/api/v1/user/change-password`,
+        passwordData,
+        {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        }
+        },
       );
 
       if (res.data.success) {
@@ -141,10 +142,9 @@ const Profile = () => {
         });
       }
     } catch (error) {
-      toast.error("Password update failed");
+      toast.error(error.response?.data?.message || "Password update failed");
     }
   };
-
 
   return (
     <div className="pt-20 min-h-screen bg-gray-100">
@@ -159,7 +159,7 @@ const Profile = () => {
           <div>
             <div className="flex flex-col justify-center items-center bg-gray-100">
               <h1 className="font-bold mb-7 text-2xl text-gray-800">
-                Upadate Profile
+                Update Profile
               </h1>
               <div className="w-full flex flex-col items-center gap-6 px-4 sm:px-6 max-w-2xl mx-auto">
                 {/* profile picture */}
@@ -167,7 +167,7 @@ const Profile = () => {
                   <img
                     src={updateUser?.profilePic || userLogo}
                     alt="profile"
-                     className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-pink-800" 
+                    className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-pink-800"
                   />
                   <Label className="mt-4 cursor-pointer bg-pink-600 text-white px-4 py-2 rounded-l hover:bg-pink-700">
                     Change Picture
@@ -186,7 +186,7 @@ const Profile = () => {
                   onSubmit={handleSubmit}
                   className="space-x-4 shadow-lg p-5 rounded-lg bg-white"
                 >
-                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label
                         htmlFor="firstName"
@@ -212,7 +212,6 @@ const Profile = () => {
                         Last Name
                       </Label>
                       <Input
-                        
                         type="text"
                         id="lastName"
                         name="lastName"
@@ -232,7 +231,6 @@ const Profile = () => {
                       Email
                     </Label>
                     <Input
-                     
                       type="email"
                       id="email"
                       name="email"
@@ -251,7 +249,6 @@ const Profile = () => {
                       Phone Number
                     </Label>
                     <Input
-                      
                       type="text"
                       id="phoneNo"
                       name="phoneNo"
@@ -270,7 +267,6 @@ const Profile = () => {
                       Address
                     </Label>
                     <Input
-                     
                       type="text"
                       id="address"
                       name="address"
@@ -289,7 +285,6 @@ const Profile = () => {
                         City
                       </Label>
                       <Input
-                       
                         type="text"
                         id="city"
                         name="city"
@@ -307,7 +302,6 @@ const Profile = () => {
                         Zip code
                       </Label>
                       <Input
-                       
                         type="text"
                         id="zipCode"
                         name="zipCode"
@@ -331,34 +325,31 @@ const Profile = () => {
           </div>
         </TabsContent>
 
-         <TabsContent value="orders">
-        <div  className="grid place-items-start justify-items-center min-h-[60vh]">
-          <MyOrder />
-        </div>
+        <TabsContent value="orders">
+          <div className="grid place-items-start justify-items-center min-h-[60vh]">
+            <MyOrder />
+          </div>
         </TabsContent>
-
-
-
 
         <TabsContent value="password">
           <div className="flex justify-center items-center min-h-[60vh]">
             <form
               onSubmit={handlePasswordChange}
-              className="bg-white w-[90%] max-w-[320px] sm:max-w-md p-4 sm:p-6 rounded-lg shadow-lg">
+              className="bg-white w-[90%] max-w-[320px] sm:max-w-md p-4 sm:p-6 rounded-lg shadow-lg"
+            >
               <h2 className="text-xl font-bold mb-4 text-center">
                 Change Password
               </h2>
-               {["old", "new", "confirm"].map((type) => {
+              {["old", "new", "confirm"].map((type) => {
                 const field =
                   type === "old"
                     ? "oldPassword"
                     : type === "new"
-                    ? "newPassword"
-                    : "confirmPassword";
+                      ? "newPassword"
+                      : "confirmPassword";
 
                 return (
                   <div key={type} className="relative mb-4">
-
                     <Input
                       type={showPassword[type] ? "text" : "password"}
                       name={field}
@@ -366,9 +357,7 @@ const Profile = () => {
                       onChange={handlePasswordInput}
                       placeholder={field}
                       autoComplete={
-                        type === "old"
-                          ? "current-password"
-                          : "new-password"
+                        type === "old" ? "current-password" : "new-password"
                       }
                     />
 

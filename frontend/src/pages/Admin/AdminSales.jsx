@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
   AreaChart,
   Area,
@@ -34,6 +35,7 @@ const AdminSales = () => {
       }
     } catch (error) {
       console.log(error);
+       toast.error("Failed to fetch sales data");
     }
   };
 

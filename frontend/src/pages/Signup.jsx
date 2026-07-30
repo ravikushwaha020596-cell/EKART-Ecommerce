@@ -40,7 +40,6 @@ function Signup() {
 
     try {
       setLoading(true)
-       console.log("Backend URL:", import.meta.env.VITE_URL);
       const res = await axios.post(
   `${import.meta.env.VITE_URL}/api/v1/user/register`,
   formData,
@@ -55,7 +54,7 @@ function Signup() {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response?.data?.message || "Network error. Please try again")
+      toast.error(error.response?.data?.message || "Signup failed");
       
     }
     finally{

@@ -11,8 +11,8 @@ const AdminOrders = () => {
     const fetchOrders = async () => {
       try {
         const { data } = await axios.get(
-  `${import.meta.env.VITE_URL}/api/v1/orders/all`,
-  {
+          `${import.meta.env.VITE_URL}/api/v1/orders/all`,
+          {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
@@ -70,7 +70,9 @@ const AdminOrders = () => {
                 <div className="mb-3">
                   <p className="text-xs font-semibold text-gray-500">User</p>
 
-                  <p className="font-medium">{order.user?.name}</p>
+                  <p className="font-medium">
+                    {order.user?.firstName} {order.user?.lastName}
+                  </p>
 
                   <p className="text-xs break-all text-gray-500">
                     {order.user?.email}
@@ -84,7 +86,8 @@ const AdminOrders = () => {
 
                   {order.products.map((p, idx) => (
                     <p key={idx}>
-                      • {p.productName} × {p.quantity}
+                      • {p.productId?.productName || "Deleted Product"} ×{" "}
+                      {p.quantity}
                     </p>
                   ))}
                 </div>
@@ -141,7 +144,7 @@ const AdminOrders = () => {
                     <td className="px-4 py-2 border break-all">{order._id}</td>
 
                     <td className="px-4 py-2 border">
-                      {order.user?.name}
+                      {order.user?.firstName} {order.user?.lastName}
                       <br />
                       <span className="text-xs text-gray-500 break-all">
                         {order.user?.email}
@@ -151,7 +154,8 @@ const AdminOrders = () => {
                     <td className="px-4 py-2 border">
                       {order.products.map((p, idx) => (
                         <div key={idx} className="text-sm">
-                          {p.productName} × {p.quantity}
+                          {p.productId?.productName || "Deleted Product"} ×{" "}
+                          {p.quantity}
                         </div>
                       ))}
                     </td>

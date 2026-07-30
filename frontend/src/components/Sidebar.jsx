@@ -22,7 +22,7 @@ const Sidebar = () => {
       {/* 🔹 HAMBURGER BUTTON (Mobile) */}
       <button
         onClick={() => setOpen(true)}
-        className="md:hidden fixed top-17 left-2 z-50 bg-pink-500 text-white p-2 rounded shadow"
+        className="md:hidden fixed top-16 left-2 z-50 bg-pink-500 text-white p-2 rounded shadow"
       >
         <Menu size={20} />
       </button>

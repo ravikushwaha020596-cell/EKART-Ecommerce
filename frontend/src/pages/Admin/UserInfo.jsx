@@ -5,11 +5,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import userLogo from "../../assets/user.jpg";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import {useDispatch, useSelector } from "react-redux";
+import {useDispatch} from "react-redux";
 import axios from "axios";
 import { setUser } from "@/redux/userSlice";
 import toast from "react-hot-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
 
 
 
@@ -84,11 +85,12 @@ const UserInfo = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.response?.data?.message || "Failed to fetch user orders");
     }
   };
   useEffect(() => {
     getUserDetails();
-  }, []);
+  }, [userId]);
 
   return (
     <div className=" min-h-screen bg-gray-100
@@ -97,8 +99,8 @@ const UserInfo = () => {
   py-6 sm:py-8 md:py-10
 
   ml-0
-  md:ml-60  
-  lg:ml-70
+  md:ml-[240px]
+lg:ml-[280px]
 
   mt-10 md:mt-5">
       <div className="max-w-7xl mx-auto">

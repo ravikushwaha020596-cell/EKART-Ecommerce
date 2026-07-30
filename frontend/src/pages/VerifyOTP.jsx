@@ -4,14 +4,16 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+
 
 const VerifyOTP = () => {
   const [otp, setOtp] = useState("");
   const navigate = useNavigate();
 
   // Get email from URL
-  const searchParams = new URLSearchParams(window.location.search);
-  const email = searchParams.get("email");
+  const [searchParams] = useSearchParams();
+const email = searchParams.get("email");
 
   useEffect(() => {
     if (!email) {

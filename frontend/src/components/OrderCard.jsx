@@ -115,4 +115,3 @@ const OrderCard = ({ userOrder }) => {
 };
 
 export default OrderCard;
-``;

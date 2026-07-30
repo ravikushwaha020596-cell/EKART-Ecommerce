@@ -23,7 +23,7 @@ import SingleProduct from './pages/SingleProduct';
 import AddressForm from './pages/AddressForm';
 import OrderSuccess from './pages/OrderSuccess';
 import ForgotPassword from './pages/ForgotPassword';
-import VerifyOTP from "./pages//VerifyOTP";
+import VerifyOTP from "./pages/VerifyOTP";
 import ResetPassword from './pages/ResetPassword';
 
 
@@ -36,10 +36,20 @@ const router = createBrowserRouter([
     path:'/signup',
     element:<><Signup/></>
   },
+
   {
     path:'/login',
     element:<><Login/></>
   },
+  {
+    path:'/verify',
+    element:<><Verify/></>
+  },
+  {
+    path:'/verify/:token',
+    element:<><VerifyEmail/></>
+  },
+
   {
   path: '/forgot-password',
   element: <><ForgotPassword /></>
@@ -48,50 +58,55 @@ const router = createBrowserRouter([
   path: "/verify-otp",
   element: <VerifyOTP />,
   },
- {
-    path:'/verify',
-    element:<><Verify/></>
-  },
+ 
    {
   path: '/reset-password',
   element: <ResetPassword />,
  },
-   {
-    path:'/verify/:token',
-    element:<><VerifyEmail/></>
-  },
-  {
-    path:'/profile/:userId',
-    element:<ProtectedRoutes ><Navbar/><Profile/></ProtectedRoutes >
-  },
+   
+  
   {
     path:'/products',
     element:<><Navbar/><Products/><Footer/></>
   },
+
   {
     path:'/products/:id',
-    element:<><Navbar/><SingleProduct/></>
+    element:<><Navbar/><SingleProduct/> <Footer /></>
   },
   {
+    path:'/profile/:userId',
+    element:(<ProtectedRoutes ><><Navbar/><Profile/></></ProtectedRoutes >)
+  },
+
+  {
     path:'/cart',
-    element:<ProtectedRoutes><Navbar/><Cart/></ProtectedRoutes>
+    element:(<ProtectedRoutes><><Navbar/><Cart/><Footer /></></ProtectedRoutes>)
   },
   {
     path:'/address',
-    element:<ProtectedRoutes><AddressForm/></ProtectedRoutes>
+    element:(<ProtectedRoutes><> <Navbar /><AddressForm/></></ProtectedRoutes>)
   },
   {
     path:'/order-success',
-    element:<ProtectedRoutes><OrderSuccess/></ProtectedRoutes>
+    element:(<ProtectedRoutes><><Navbar /><OrderSuccess/></></ProtectedRoutes>)
   },
+
+
+  
   {
    path:'/dashboard',
-    element:<ProtectedRoutes adminOnly={true}><Navbar/><Dashboard/></ProtectedRoutes>,
+    element:<ProtectedRoutes adminOnly={true}><><Navbar/><Dashboard/></></ProtectedRoutes>,
     children:[
       {
-        path:"sales",
+        index:true,
         element: <AdminSales/>,
       },
+       {
+        path: "sales",
+        element: <AdminSales />,
+      },
+
        {
         path:"add-product",
         element: <AddProduct/>,
@@ -105,16 +120,18 @@ const router = createBrowserRouter([
         element: <AdminOrders/>
       },
       {
-        path:"users/orders/:userId",
-        element: <ShowUserOrders/>
-      },
-       {
         path:"users",
         element: <AdminUsers/>
       },
+      
+       
        {
         path:"users/:id",
         element: <UserInfo/>
+      },
+      {
+        path:"users/orders/:userId",
+        element: <ShowUserOrders/>
       },
     ]
   }

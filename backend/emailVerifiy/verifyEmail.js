@@ -3,51 +3,49 @@ import "dotenv/config.js";
 
 export const verifyEmail = async (token, email) => {
   try {
+
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
       secure: false,
-      family: 4,
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
       },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
     });
+
 
     const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
 
-    const mailConfigurations = {
+
+    await transporter.sendMail({
       from: process.env.MAIL_USER,
       to: email,
       subject: "Email Verification",
 
       html: `
-        <h2>Welcome to E-Commerce</h2>
-        <p>Click the button below to verify your email.</p>
+      <h2>Welcome to Ekart</h2>
 
-        <a href="${verifyUrl}"
-        style="
-          display:inline-block;
-          padding:12px 20px;
-          background:#2563eb;
-          color:#fff;
-          text-decoration:none;
-          border-radius:6px;
-        ">
-        Verify Email
-        </a>
+      <p>Click below to verify your email</p>
 
-        <p>If the button doesn't work, copy and paste this link:</p>
-        <p>${verifyUrl}</p>
+      <a href="${verifyUrl}">
+      Verify Email
+      </a>
+
+      <p>${verifyUrl}</p>
       `,
-    };
+    });
 
-    await transporter.sendMail(mailConfigurations);
 
     console.log("Verification Email Sent Successfully");
 
-  } catch (error) {
-    console.error("Error Sending Verification Email:", error.message);
+  } catch(error){
+
+    console.log("MAIL ERROR:", error.message);
     throw error;
+
   }
 };

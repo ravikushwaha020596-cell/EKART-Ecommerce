@@ -36,6 +36,7 @@ function Signup() {
   };
   const submitHandler = async (e) => {
     e.preventDefault();
+    console.log("VITE_URL =", import.meta.env.VITE_URL);
     console.log(formData);
 
     try {

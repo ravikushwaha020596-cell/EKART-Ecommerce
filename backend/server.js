@@ -19,6 +19,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://ekart-ecommerce-gamma.vercel.app",
+      "https://ekart-ecommerce-livid.vercel.app", 
     ],
     credentials: true,
   })

@@ -29,15 +29,13 @@ app.use("/api/v1/cart", cartRoute);
 app.use("/api/v1/orders", orderRoute);
 
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://ekart-ecommerce-gamma.vercel.app",
-    ],
-    credentials: true,
-  })
-);
+
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "Ekart Backend API is Running",
+  });
+});
 
 const PORT = process.env.PORT || 8000;
 

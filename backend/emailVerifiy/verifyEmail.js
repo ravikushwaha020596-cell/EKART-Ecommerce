@@ -1,51 +1,53 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import "dotenv/config.js";
 
-export const verifyEmail = async (token, email) => {
-  try {
 
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 10000,
-    });
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 
-    const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
+export const verifyEmail = async(token,email)=>{
+
+try{
+
+const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
 
 
-    await transporter.sendMail({
-      from: process.env.MAIL_USER,
-      to: email,
-      subject: "Email Verification",
+await resend.emails.send({
 
-      html: `
-      <h2>Welcome to Ekart</h2>
+from:"Ekart <onboarding@resend.dev>",
 
-      <p>Click below to verify your email</p>
+to:[email],
 
-      <a href="${verifyUrl}">
-      Verify Email
-      </a>
+subject:"Email Verification",
 
-      <p>${verifyUrl}</p>
-      `,
-    });
+html:`
+
+<h2>Welcome to Ekart</h2>
+
+<p>Click below to verify your email</p>
+
+<a href="${verifyUrl}">
+Verify Email
+</a>
+
+<br/>
+
+<p>${verifyUrl}</p>
+
+`
+
+});
 
 
-    console.log("Verification Email Sent Successfully");
+console.log("Verification Email Sent Successfully");
 
-  } catch(error){
 
-    console.log("MAIL ERROR:", error.message);
-    throw error;
+}catch(error){
 
-  }
+console.log("MAIL ERROR:",error.message);
+
+throw error;
+
+}
+
 };

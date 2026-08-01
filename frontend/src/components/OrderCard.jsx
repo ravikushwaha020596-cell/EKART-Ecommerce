@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const OrderCard = ({ userOrder, withSidebar = true }) => {
+const OrderCard = ({ userOrder, withSidebar = false  }) => {
   const navigate = useNavigate();
 
   return (

@@ -35,7 +35,10 @@ const ShowUserOrders = () => {
 
   return (
     <>
-      <OrderCard userOrder={userOrder} />
+      <OrderCard
+  userOrder={userOrder}
+  withSidebar={true}
+/>
     </>
   );
   };

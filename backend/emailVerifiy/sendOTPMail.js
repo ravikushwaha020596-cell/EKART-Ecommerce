@@ -13,6 +13,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("SMTP VERIFY ERROR:", error);
+  } else {
+    console.log("SMTP Server is ready");
+  }
+});
 
 export const sendOTPMail = async (otp, email) => {
 

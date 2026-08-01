@@ -15,7 +15,7 @@ export const Tabs = ({ children, defaultValue, className = "" }) => {
 
 export const TabsList = ({ children, className = "" }) => {
   return (
-    <div className={`flex gap-4 border-b mb-4 ${className}`}>
+    <div className={`flex gap-4  mb-4 ${className}`}>
       {children}
     </div>
   );
@@ -27,7 +27,7 @@ export const TabsTrigger = ({ value, children }) => {
 
   return (
     <button
-      className={`px-4 py-2 rounded-t-lg transition-all duration-200 ${
+      className={`px-4 py-2 rounded-lg transition-all duration-200 ${
         isActive
           ? "bg-pink-600 text-white"
           : "bg-gray-200 text-gray-700 hover:bg-gray-300"

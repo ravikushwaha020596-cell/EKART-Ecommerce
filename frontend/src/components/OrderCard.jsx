@@ -3,17 +3,24 @@ import { Button } from "./ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const OrderCard = ({ userOrder }) => {
+const OrderCard = ({ userOrder, withSidebar = true }) => {
   const navigate = useNavigate();
 
   return (
     <div
-      className="min-h-screen bg-gray-100
-
-      px-3 sm:px-4 md:px-6 lg:px-8
-      py-6 sm:py-8 md:py-10"
+      className={`
+    min-h-screen
+    bg-gray-100
+    px-2
+    sm:px-4
+    md:px-6
+    py-15
+    sm:py-6
+    md:py-8
+    ${withSidebar ? "md:pl-[300px] md:pr-6 mt-15" : ""}
+  `}
     >
-      <div className="max-w-6xl mx-auto w-full">
+      <div className="w-full">
         <div className="flex items-center gap-4 mb-6">
           <Button onClick={() => navigate(-1)}>
             <ArrowLeft />
@@ -33,7 +40,7 @@ const OrderCard = ({ userOrder }) => {
                 className="shadow-lg rounded-2xl p-5 border border-gray-200 w-full bg-white"
               >
                 {/* Order header */}
-                <div className="flex flex-col sm:flex-row justify-between gap-2 sm:items-center mb-4">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-4">
                   <h2 className="text-lg font-semibold break-all">
                     Order Id: <span className="text-gray-600">{order._id}</span>
                   </h2>
@@ -58,13 +65,19 @@ const OrderCard = ({ userOrder }) => {
                     </p>
                   </div>
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold inline-block shadow-sm ${
-                      order.status === "Paid"
-                        ? "bg-green-100 text-green-700"
-                        : order.status === "Failed"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-orange-100 text-orange-700"
-                    }`}
+                    className={`inline-flex w-fit items-center justify-center
+                   px-2 py-1
+                    text-[11px] sm:text-xs
+                    rounded-full
+                     font-medium
+                       whitespace-nowrap
+                      ${
+                        order.status === "Paid"
+                          ? "bg-green-100 text-green-700"
+                          : order.status === "Failed"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-orange-100 text-orange-700"
+                      }`}
                   >
                     {order.status}
                   </span>
@@ -79,19 +92,19 @@ const OrderCard = ({ userOrder }) => {
                       return (
                         <li
                           key={index}
-                          className="flex flex-col sm:flex-row sm:items-center gap-3 bg-gray-50 rounded-lg p-2"
+                          className="flex flex-col md:flex-row md:items-center gap-4 bg-gray-50 rounded-lg p-3"
                         >
                           <img
                             onClick={() =>
                               prod?._id && navigate(`/products/${prod._id}`)
                             }
-                            className="w-20 object-cover rounded cursor-pointer"
+                              className="w-full h-40 sm:h-32 md:h-20 md:w-20 object-contain rounded-lg cursor-pointer shrink-0 bg-white"
                             src={
                               prod?.productImage?.[0]?.URL || "/placeholder.png"
                             }
                             alt={prod?.productName || "Deleted Product"}
                           />
-                          <div className="flex-1 flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-2 w-full">
+                          <div className="flex-1 flex flex-col md:flex-row md:justify-between md:items-center gap-2 w-full">
                             <span className="line-clamp-2 text-sm">
                               {prod?.productName || "Deleted Product"}
                             </span>

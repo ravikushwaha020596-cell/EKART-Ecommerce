@@ -40,10 +40,23 @@ const AdminOrders = () => {
 
   return (
     <div
-      className="w-full min-h-screen bg-gray-100 
-     px-2 sm:px-3 md:px-4  py-2 sm:py-6 md:ml-[240px]
-      lg:ml-[280px] md:w-[calc(100%-240px)] 
-      lg:w-[calc(100%-280px)] mt-12"
+      className="
+  min-h-screen
+  bg-gray-100
+
+  px-2
+  sm:px-4
+  md:px-6
+
+  py-4
+  sm:py-6
+  md:py-8
+
+  md:pl-[300px]
+  md:pr-6
+
+  mt-15
+"
     >
       <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-6 mt-12 sm:mt-0">
         Admin - All Orders

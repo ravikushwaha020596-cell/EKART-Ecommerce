@@ -1,14 +1,5 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useParams } from "react-router-dom";
@@ -97,8 +88,8 @@ const Profile = () => {
       );
       if (res.data.success) {
         dispatch(setUser(res.data.user));
-  setUpdateUser(res.data.user);
-  toast.success(res.data.message);
+        setUpdateUser(res.data.user);
+        toast.success(res.data.message);
       }
     } catch (error) {
       console.log(error);
@@ -149,7 +140,7 @@ const Profile = () => {
   return (
     <div className="pt-20 min-h-screen bg-gray-100">
       <Tabs defaultValue="profile" className="max-w-7xl mx-auto items-center">
-        <TabsList className="justify-center w-full">
+        <TabsList className="justify-center w-full pr-2 pl-2">
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="password">Change Password</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
@@ -158,7 +149,7 @@ const Profile = () => {
         <TabsContent value="profile">
           <div>
             <div className="flex flex-col justify-center items-center bg-gray-100">
-              <h1 className="font-bold mb-7 text-2xl text-gray-800">
+              <h1 className="font-bold mb-5 text-2xl text-gray-800">
                 Update Profile
               </h1>
               <div className="w-full flex flex-col items-center gap-6 px-4 sm:px-6 max-w-2xl mx-auto">
@@ -325,8 +316,8 @@ const Profile = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="orders">
-          <div className="grid place-items-start justify-items-center min-h-[60vh]">
+        <TabsContent value="orders" className="mt-2">
+          <div className="w-full">
             <MyOrder />
           </div>
         </TabsContent>

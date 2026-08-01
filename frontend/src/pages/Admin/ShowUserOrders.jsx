@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 const ShowUserOrders = () => {
   const params = useParams();
 
-  const [userOrder, setUserOrder] = useState(null);
+  const [userOrder, setUserOrder] = useState([]);
   const getUserOrders = async () => {
     const accessToken = localStorage.getItem("accessToken");
     try {
@@ -25,7 +25,7 @@ const ShowUserOrders = () => {
     }
   }
   catch (error) {
-    console.log(error);
+    console.error("Failed to fetch user orders:", error);
     toast.error(error.response?.data?.message || "Failed to fetch user orders");
   }
 };

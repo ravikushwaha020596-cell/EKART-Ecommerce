@@ -1,15 +1,20 @@
 import nodemailer from "nodemailer";
 import "dotenv/config";
 
-
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,          // Brevo SMTP
-  port: Number(process.env.SMTP_PORT),  // 587
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
   secure: false,
+  requireTLS: true,
+
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
 });
 
 
@@ -18,40 +23,47 @@ export const verifyEmail = async (token, email) => {
 
     const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
 
+
     await transporter.sendMail({
 
       from: `"Ekart" <${process.env.MAIL_FROM}>`,
 
       to: email,
 
-      subject: "Email Verification",
+      subject: "Email Verification - Ekart",
 
       html: `
-        <h2>Welcome to Ekart</h2>
+        <div style="font-family:Arial;padding:20px">
 
-        <p>Click below to verify your email</p>
+          <h2>Welcome to Ekart</h2>
 
-        <a href="${verifyUrl}" 
-        style="
-        display:inline-block;
-        padding:10px 20px;
-        background:#ec4899;
-        color:white;
-        text-decoration:none;
-        border-radius:5px;
-        ">
+          <p>Thank you for registering with Ekart.</p>
+
+          <p>Please verify your email by clicking the button below.</p>
+
+
+          <a href="${verifyUrl}"
+          style="
+          display:inline-block;
+          padding:12px 25px;
+          background:#ec4899;
+          color:white;
+          text-decoration:none;
+          border-radius:5px;
+          ">
           Verify Email
-        </a>
+          </a>
 
-        <br><br>
 
-        <p>
-        If the button doesn't work, copy and paste this link into your browser:
-        </p>
+          <br/><br/>
 
-        <a href="${verifyUrl}">
-          ${verifyUrl}
-        </a>
+
+          <p>If button does not work, open this link:</p>
+
+          <p>${verifyUrl}</p>
+
+
+        </div>
       `,
     });
 
@@ -59,7 +71,7 @@ export const verifyEmail = async (token, email) => {
     console.log("Verification Email Sent Successfully");
 
 
-  } catch (error) {
+  } catch(error){
 
     console.log("MAIL ERROR:", error);
 

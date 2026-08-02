@@ -15,16 +15,6 @@ const transporter = nodemailer.createTransport({
 });
 
 
-// SMTP Test
-transporter.verify((error) => {
-  if (error) {
-    console.error("SMTP Connection Failed:", error.message);
-  } else {
-    console.log("✅ Brevo SMTP Connected Successfully");
-  }
-});
-
-
 export const verifyEmail = async (token, email) => {
   try {
 
@@ -51,7 +41,6 @@ export const verifyEmail = async (token, email) => {
         Click below to verify your email:
         </p>
 
-
         <a href="${verifyUrl}"
         style="
         background:#ec4899;
@@ -64,19 +53,15 @@ export const verifyEmail = async (token, email) => {
         Verify Email
         </a>
 
-
         <br/><br/>
-
 
         <p>
         Or copy this link:
         </p>
 
-
         <a href="${verifyUrl}">
         ${verifyUrl}
         </a>
-
 
         <br/><br/>
 

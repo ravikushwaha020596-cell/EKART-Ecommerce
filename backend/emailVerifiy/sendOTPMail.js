@@ -8,140 +8,110 @@ const transporter = nodemailer.createTransport({
 
   port: 587,
 
-  secure:false,
+  secure: false,
 
-
-  auth:{
-    user:process.env.SMTP_USER,
-    pass:process.env.SMTP_PASS
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
   },
 
-
-  requireTLS:true,
+  requireTLS: true,
 
 });
 
 
 
-// SMTP Test
 
-transporter.verify((error)=>{
+export const sendOTPMail = async (otp, email) => {
 
-  if(error){
+  try {
+
+
+    const info = await transporter.sendMail({
+
+      from: `"Ekart 🛒" <${process.env.MAIL_FROM}>`,
+
+      to: email,
+
+      subject: "Ekart Password Reset OTP",
+
+
+      html: `
+
+      <div style="font-family:Arial">
+
+        <h2>
+        Ekart Password Reset 🛒
+        </h2>
+
+
+        <p>
+        Your OTP is:
+        </p>
+
+
+        <h1 style="
+        color:#ec4899;
+        letter-spacing:5px;
+        font-size:35px;
+        ">
+
+        ${otp}
+
+        </h1>
+
+
+
+        <p>
+        This OTP is valid for 
+        <b>10 minutes</b>.
+        </p>
+
+
+
+        <p>
+        If you did not request this,
+        ignore this email.
+        </p>
+
+
+
+        <br>
+
+
+        <p>
+        Regards,<br>
+        Ekart Team
+        </p>
+
+
+      </div>
+
+      `
+
+    });
+
+
+
+    console.log(
+      "✅ OTP Email Sent:",
+      info.messageId
+    );
+
+
+
+  } catch(error) {
+
 
     console.error(
-      "SMTP Connection Failed:",
+      "OTP MAIL ERROR:",
       error.message
     );
 
-  }
-  else{
 
-    console.log(
-      "✅ Brevo SMTP Ready"
-    );
+    throw error;
+
 
   }
-
-});
-
-
-
-
-export const sendOTPMail = async(otp,email)=>{
-
-try{
-
-
-const info = await transporter.sendMail({
-
-from:
-`"Ekart 🛒" <${process.env.MAIL_FROM}>`,
-
-
-to:email,
-
-
-subject:"Ekart Password Reset OTP",
-
-
-
-html:`
-
-<div style="font-family:Arial">
-
-
-<h2>
-Ekart Password Reset 🛒
-</h2>
-
-
-<p>
-Your OTP is:
-</p>
-
-
-<h1 style="
-color:#ec4899;
-letter-spacing:5px;
-font-size:35px;
-">
-
-${otp}
-
-</h1>
-
-
-
-<p>
-This OTP is valid for 
-<b>10 minutes</b>.
-</p>
-
-
-
-<p>
-If you did not request this,
-ignore this email.
-</p>
-
-
-
-<br>
-
-
-<p>
-Regards,<br>
-Ekart Team
-</p>
-
-
-</div>
-
-`
-
-});
-
-
-console.log(
-"✅ OTP Email Sent:",
-info.messageId
-);
-
-
-
-}catch(error){
-
-
-console.error(
-"OTP MAIL ERROR:",
-error.message
-);
-
-
-throw error;
-
-
-}
 
 };

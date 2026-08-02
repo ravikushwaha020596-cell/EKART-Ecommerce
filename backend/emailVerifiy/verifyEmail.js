@@ -1,24 +1,30 @@
 import nodemailer from "nodemailer";
 import "dotenv/config";
 
+
 const transporter = nodemailer.createTransport({
+
   host: process.env.SMTP_HOST,
+
   port: Number(process.env.SMTP_PORT),
+
   secure: false,
-  requireTLS: true,
 
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
 
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
+  tls: {
+    rejectUnauthorized: false,
+  },
+
 });
 
 
+
 export const verifyEmail = async (token, email) => {
+
   try {
 
     const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
@@ -32,38 +38,66 @@ export const verifyEmail = async (token, email) => {
 
       subject: "Email Verification - Ekart",
 
+
       html: `
-        <div style="font-family:Arial;padding:20px">
 
-          <h2>Welcome to Ekart</h2>
+      <div style="
+        font-family: Arial;
+        padding:20px;
+        background:#f9fafb;
+      ">
 
-          <p>Thank you for registering with Ekart.</p>
+        <h2 style="color:#ec4899;">
+          Welcome to Ekart
+        </h2>
 
-          <p>Please verify your email by clicking the button below.</p>
+
+        <p>
+          Thank you for registering with Ekart.
+        </p>
 
 
-          <a href="${verifyUrl}"
-          style="
+        <p>
+          Please verify your email by clicking the button below.
+        </p>
+
+
+
+        <a href="${verifyUrl}"
+        style="
           display:inline-block;
           padding:12px 25px;
           background:#ec4899;
           color:white;
           text-decoration:none;
           border-radius:5px;
-          ">
+        ">
           Verify Email
-          </a>
+        </a>
 
 
-          <br/><br/>
+
+        <br/><br/>
 
 
-          <p>If button does not work, open this link:</p>
+        <p>
+          If button does not work, copy this link:
+        </p>
 
-          <p>${verifyUrl}</p>
+
+        <p>
+          ${verifyUrl}
+        </p>
 
 
-        </div>
+        <p>
+          Thanks,<br/>
+          Ekart Team
+        </p>
+
+
+      </div>
+
       `,
     });
 
@@ -71,10 +105,12 @@ export const verifyEmail = async (token, email) => {
     console.log("Verification Email Sent Successfully");
 
 
-  } catch(error){
+  } catch (error) {
 
     console.log("MAIL ERROR:", error);
 
     throw error;
+
   }
+
 };

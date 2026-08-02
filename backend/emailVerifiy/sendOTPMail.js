@@ -8,67 +8,83 @@ const transporter = nodemailer.createTransport({
 
   port: Number(process.env.SMTP_PORT),
 
-  secure:false,
+  secure: false,
 
-  requireTLS:true,
-
-  auth:{
-    user:process.env.SMTP_USER,
-    pass:process.env.SMTP_PASS,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 
-  connectionTimeout:10000,
-  greetingTimeout:10000,
-  socketTimeout:10000,
+  tls: {
+    rejectUnauthorized: false,
+  },
 
 });
 
 
 
-export const sendOTPMail = async(otp,email)=>{
+export const sendOTPMail = async (otp, email) => {
 
-try{
+  try {
 
+    await transporter.sendMail({
 
-await transporter.sendMail({
+      from: `"Ekart" <${process.env.MAIL_FROM}>`,
 
-from:`"Ekart" <${process.env.MAIL_FROM}>`,
+      to: email,
 
-to:email,
-
-subject:"Password Reset OTP - Ekart",
-
-
-html:`
-
-<div style="font-family:Arial">
-
-<h2>Ekart Password Reset</h2>
-
-<p>Your OTP is:</p>
-
-<h1>${otp}</h1>
-
-<p>This OTP is valid for 10 minutes.</p>
+      subject: "Password Reset OTP - Ekart",
 
 
-</div>
+      html: `
 
-`
+      <div style="
+        font-family: Arial;
+        padding:20px;
+      ">
 
-});
+        <h2 style="color:#ec4899;">
+          Ekart Password Reset
+        </h2>
 
 
-console.log("OTP Email Sent Successfully");
+        <p>
+          Your OTP is:
+        </p>
 
 
-}catch(error){
+        <h1>
+          ${otp}
+        </h1>
 
-console.log("OTP MAIL ERROR:",error);
 
-throw error;
+        <p>
+          This OTP is valid for 10 minutes.
+        </p>
 
-}
 
+        <p>
+          Thanks,<br/>
+          Ekart Team
+        </p>
+
+
+      </div>
+
+      `,
+
+    });
+
+
+    console.log("OTP Email Sent Successfully");
+
+
+  } catch (error) {
+
+    console.log("OTP MAIL ERROR:", error);
+
+    throw error;
+
+  }
 
 };

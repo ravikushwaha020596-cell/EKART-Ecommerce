@@ -1,73 +1,64 @@
-import * as Brevo from "@getbrevo/brevo";
+import nodemailer from "nodemailer";
 import "dotenv/config";
 
-const apiInstance = new Brevo.TransactionalEmailsApi();
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",        
+  port: 587,                     
+  secure: false,                 
+  family: 4,                     
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
+});
 
-apiInstance.setApiKey(
-  Brevo.TransactionalEmailsApiApiKeys.apiKey,
-  process.env.BREVO_API_KEY
-);
+
 
 export const verifyEmail = async (token, email) => {
   try {
+
     const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
 
-    const sendSmtpEmail = new Brevo.SendSmtpEmail();
+    await transporter.sendMail({
+      from: `"Ekart" <${process.env.MAIL_USER}>`,
+      to: email,
+      subject: "Email Verification",
 
-    sendSmtpEmail.subject = "Verify Your Ekart Account";
+      html: `
+        <h2>Welcome to Ekart</h2>
 
-    sendSmtpEmail.sender = {
-      name: "Ekart 🛒",
-      email: process.env.MAIL_FROM,
-    };
+        <p>Click below to verify your email</p>
 
-    sendSmtpEmail.to = [
-      {
-        email: email,
-      },
-    ];
-
-    sendSmtpEmail.htmlContent = `
-      <div style="font-family:Arial">
-        <h2>Welcome to Ekart 🛒</h2>
-
-        <p>Thank you for registering.</p>
-
-        <p>Click below to verify your email.</p>
-
-        <a href="${verifyUrl}"
+        <a href="${verifyUrl}" 
         style="
+        padding:10px 20px;
         background:#ec4899;
         color:white;
-        padding:12px 20px;
         text-decoration:none;
-        border-radius:6px;
-        display:inline-block;">
-        Verify Email
+        border-radius:5px;
+        ">
+          Verify Email
         </a>
 
         <br><br>
 
-        <p>Or copy this link:</p>
+        <p>
+        If the button doesn't work, copy and paste this link into your browser:
+        </p>
 
         <a href="${verifyUrl}">
-        ${verifyUrl}
+          ${verifyUrl}
         </a>
+      `,
+    });
 
-        <br><br>
 
-        <p>Regards,<br>Ekart Team</p>
-      </div>
-    `;
+    console.log("Verification Email Sent Successfully");
 
-    const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
-
-    console.log("✅ VERIFY EMAIL SENT", result.body);
   } catch (error) {
-    console.log(
-      "VERIFY EMAIL ERROR:",
-      error.response?.body || error.message
-    );
+
+    console.log("MAIL ERROR:", error);
+
     throw error;
   }
 };

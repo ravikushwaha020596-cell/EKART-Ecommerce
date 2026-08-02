@@ -18,7 +18,6 @@ export const register = async (req, res) => {
     }
 
     const userExists = await User.findOne({ email });
-
     if (userExists) {
       return res.status(400).json({
         success: false,
@@ -27,7 +26,6 @@ export const register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const newUser = await User.create({
       firstName,
       lastName,
@@ -35,33 +33,17 @@ export const register = async (req, res) => {
       password: hashedPassword,
     });
 
-
-    const token = jwt.sign(
-      { id: newUser._id },
-      process.env.SECRET_KEY,
-      {
-        expiresIn: "10m",
-      }
-    );
-
-
+    const token = jwt.sign({ id: newUser._id }, process.env.SECRET_KEY, {
+      expiresIn: "10m",
+    });
     newUser.token = token;
     await newUser.save();
 
-
-    try {
-      await verifyEmail(token, email);
-      console.log("Verification mail sent");
-    } catch (mailError) {
-      console.log("Email sending failed:", mailError.message);
-    }
-
-
+    await verifyEmail(token, email);
     return res.status(201).json({
       success: true,
-      message: "User registered successfully. Please verify your email.",
-      token,
-
+      message: "User registered successfully",
+      token: token,
       user: {
         _id: newUser._id,
         firstName: newUser.firstName,
@@ -71,18 +53,15 @@ export const register = async (req, res) => {
         isVerified: newUser.isVerified,
       },
     });
-
-
   } catch (error) {
-
-    console.error("REGISTER ERROR:", error);
-
+    console.error("REGISTER ERROR ", error);
     return res.status(500).json({
-      success:false,
-      message:error.message,
+      success: false,
+      message: error.message,
     });
   }
 };
+
 export const verify = async (req, res) => {
   try {
     const authHeader = req.headers.authorization;

@@ -1,63 +1,55 @@
-import * as Brevo from "@getbrevo/brevo";
+import nodemailer from "nodemailer";
 import "dotenv/config";
 
-const apiInstance = new Brevo.TransactionalEmailsApi();
 
-apiInstance.setApiKey(
-  Brevo.TransactionalEmailsApiApiKeys.apiKey,
-  process.env.BREVO_API_KEY
-);
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",        
+  port: 587,                     
+  secure: false,                 
+  family: 4,                     
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
+});
+
+
 
 export const sendOTPMail = async (otp, email) => {
+
   try {
-    const sendSmtpEmail = new Brevo.SendSmtpEmail();
 
-    sendSmtpEmail.subject = "Ekart Password Reset OTP";
+    await transporter.sendMail({
 
-    sendSmtpEmail.sender = {
-      name: "Ekart 🛒",
-      email: process.env.MAIL_FROM,
-    };
+      from: `"Ekart" <${process.env.MAIL_USER}>`,
 
-    sendSmtpEmail.to = [
-      {
-        email: email,
-      },
-    ];
+      to: email,
 
-    sendSmtpEmail.htmlContent = `
-      <div style="font-family:Arial">
+      subject: "Password Reset OTP",
 
-        <h2>Ekart Password Reset 🛒</h2>
+      html: `
+
+        <h2>Password Reset</h2>
 
         <p>Your OTP is:</p>
 
-        <h1 style="
-        color:#ec4899;
-        letter-spacing:5px;
-        font-size:35px;">
-        ${otp}
-        </h1>
+        <h1>${otp}</h1>
 
-        <p>This OTP is valid for <b>10 minutes</b>.</p>
+        <p>This OTP is valid for 10 minutes.</p>
 
-        <p>If you did not request this email, ignore it.</p>
+      `,
+    });
 
-        <br>
 
-        <p>Regards,<br>Ekart Team</p>
+    console.log("OTP Email Sent Successfully");
 
-      </div>
-    `;
 
-    const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
+  } catch(error){
 
-    console.log("✅ OTP SENT", result.body);
-  } catch (error) {
-    console.log(
-      "OTP MAIL ERROR:",
-      error.response?.body || error.message
-    );
+    console.log("OTP MAIL ERROR:", error);
+
     throw error;
+
   }
+
 };

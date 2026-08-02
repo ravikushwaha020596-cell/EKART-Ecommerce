@@ -6,7 +6,6 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   requireTLS: true,
-
   family: 4,
 
   connectionTimeout: 30000,
@@ -19,69 +18,33 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// SMTP connection test
-transporter.verify((error) => {
-  if (error) {
-    console.error("SMTP VERIFY ERROR:", error);
-  } else {
-    console.log("SMTP READY");
-  }
-});
 
-export const verifyEmail = async (token, email) => {
+export const sendOTPMail = async (otp, email) => {
   try {
 
-    console.log("========== EMAIL DEBUG ==========");
-    console.log("MAIL_USER:", process.env.MAIL_USER);
-    console.log("MAIL_PASS exists:", !!process.env.MAIL_PASS);
-    console.log("CLIENT_URL:", process.env.CLIENT_URL);
-    console.log("Sending To:", email);
-    console.log("================================");
-
-    const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
-
     await transporter.sendMail({
-
       from: `"Ekart" <${process.env.MAIL_USER}>`,
-
       to: email,
-
-      subject: "Email Verification",
+      subject: "Password Reset OTP",
 
       html: `
-        <h2>Welcome to Ekart</h2>
+        <h2>Password Reset</h2>
 
-        <p>Click below to verify your email</p>
+        <p>Your OTP is:</p>
 
-        <a href="${verifyUrl}"
-        style="
-          display:inline-block;
-          padding:10px 20px;
-          background:#ec4899;
-          color:white;
-          text-decoration:none;
-          border-radius:5px;
-        ">
-          Verify Email
-        </a>
+        <h1>${otp}</h1>
 
-        <br><br>
-
-        <p>
-          If the button doesn't work, copy and paste this link into your browser:
-        </p>
-
-        <a href="${verifyUrl}">
-          ${verifyUrl}
-        </a>
+        <p>This OTP is valid for 10 minutes.</p>
       `,
     });
 
-    console.log("Verification Email Sent Successfully");
 
-  } catch (error) {
+    console.log("OTP Email Sent Successfully");
 
-    console.error("MAIL ERROR:", error);
+
+  } catch(error){
+
+    console.log("OTP MAIL ERROR:", error);
 
     throw error;
   }

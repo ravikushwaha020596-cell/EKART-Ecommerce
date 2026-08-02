@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// 👇 Yahan add karo
+// SMTP connection test
 transporter.verify((error, success) => {
   if (error) {
     console.error("SMTP VERIFY ERROR:", error);
@@ -20,13 +20,20 @@ transporter.verify((error, success) => {
 
 export const verifyEmail = async (token, email) => {
   try {
+    // Debug
+    console.log("========== EMAIL DEBUG ==========");
+    console.log("MAIL_USER:", process.env.MAIL_USER);
+    console.log("MAIL_PASS exists:", !!process.env.MAIL_PASS);
+    console.log("CLIENT_URL:", process.env.CLIENT_URL);
+    console.log("Sending To:", email);
+    console.log("================================");
+
     const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
 
     await transporter.sendMail({
       from: `"Ekart" <${process.env.MAIL_USER}>`,
       to: email,
       subject: "Email Verification",
-
       html: `
         <h2>Welcome to Ekart</h2>
 
@@ -34,11 +41,11 @@ export const verifyEmail = async (token, email) => {
 
         <a href="${verifyUrl}"
         style="
-        padding:10px 20px;
-        background:#ec4899;
-        color:white;
-        text-decoration:none;
-        border-radius:5px;
+          padding:10px 20px;
+          background:#ec4899;
+          color:white;
+          text-decoration:none;
+          border-radius:5px;
         ">
           Verify Email
         </a>
@@ -46,7 +53,7 @@ export const verifyEmail = async (token, email) => {
         <br><br>
 
         <p>
-        If the button doesn't work, copy and paste this link into your browser:
+          If the button doesn't work, copy and paste this link into your browser:
         </p>
 
         <a href="${verifyUrl}">
@@ -57,7 +64,7 @@ export const verifyEmail = async (token, email) => {
 
     console.log("Verification Email Sent Successfully");
   } catch (error) {
-    console.log("MAIL ERROR:", error);
+    console.error("MAIL ERROR:", error);
     throw error;
   }
 };

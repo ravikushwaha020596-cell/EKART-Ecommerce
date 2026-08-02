@@ -1,7 +1,6 @@
 import nodemailer from "nodemailer";
 import "dotenv/config";
 
-
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
@@ -13,19 +12,22 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// SMTP Connection Test
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("SMTP Verify Error:", error);
+  } else {
+    console.log("SMTP Server is ready to send emails");
+  }
+});
 
 export const verifyEmail = async (token, email) => {
   try {
-
     const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
 
-
     await transporter.sendMail({
-
       from: `"Ekart" <${process.env.MAIL_FROM}>`,
-
       to: email,
-
       subject: "Email Verification",
 
       html: `
@@ -35,7 +37,7 @@ export const verifyEmail = async (token, email) => {
 
         <p>Click below to verify your email:</p>
 
-        <a href="${verifyUrl}" 
+        <a href="${verifyUrl}"
         style="
           display:inline-block;
           padding:10px 20px;
@@ -67,14 +69,9 @@ export const verifyEmail = async (token, email) => {
       `,
     });
 
-
     console.log("Verification Email Sent Successfully");
-
   } catch (error) {
-
     console.log("MAIL ERROR:", error);
-
     throw error;
-
   }
 };

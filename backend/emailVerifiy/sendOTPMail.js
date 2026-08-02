@@ -1,7 +1,6 @@
 import nodemailer from "nodemailer";
 import "dotenv/config";
 
-
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
@@ -13,17 +12,20 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// SMTP Connection Test
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("SMTP Verify Error:", error);
+  } else {
+    console.log("SMTP Server is ready to send emails");
+  }
+});
 
 export const sendOTPMail = async (otp, email) => {
-
   try {
-
     await transporter.sendMail({
-
       from: `"Ekart" <${process.env.MAIL_FROM}>`,
-
       to: email,
-
       subject: "Password Reset OTP",
 
       html: `
@@ -50,16 +52,9 @@ export const sendOTPMail = async (otp, email) => {
       `,
     });
 
-
     console.log("OTP Email Sent Successfully");
-
-
   } catch (error) {
-
     console.log("OTP MAIL ERROR:", error);
-
     throw error;
-
   }
-
 };

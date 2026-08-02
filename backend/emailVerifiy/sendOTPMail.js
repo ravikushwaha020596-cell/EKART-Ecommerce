@@ -1,103 +1,63 @@
-import Brevo from "@getbrevo/brevo";
+import * as Brevo from "@getbrevo/brevo";
 import "dotenv/config";
 
-
 const apiInstance = new Brevo.TransactionalEmailsApi();
-
 
 apiInstance.setApiKey(
   Brevo.TransactionalEmailsApiApiKeys.apiKey,
   process.env.BREVO_API_KEY
 );
 
+export const sendOTPMail = async (otp, email) => {
+  try {
+    const sendSmtpEmail = new Brevo.SendSmtpEmail();
 
+    sendSmtpEmail.subject = "Ekart Password Reset OTP";
 
-export const sendOTPMail = async (otp,email)=>{
+    sendSmtpEmail.sender = {
+      name: "Ekart 🛒",
+      email: process.env.MAIL_FROM,
+    };
 
-try{
+    sendSmtpEmail.to = [
+      {
+        email: email,
+      },
+    ];
 
+    sendSmtpEmail.htmlContent = `
+      <div style="font-family:Arial">
 
-const sendSmtpEmail = new Brevo.SendSmtpEmail();
+        <h2>Ekart Password Reset 🛒</h2>
 
+        <p>Your OTP is:</p>
 
-sendSmtpEmail.subject =
-"Ekart Password Reset OTP";
+        <h1 style="
+        color:#ec4899;
+        letter-spacing:5px;
+        font-size:35px;">
+        ${otp}
+        </h1>
 
+        <p>This OTP is valid for <b>10 minutes</b>.</p>
 
-sendSmtpEmail.sender = {
-name:"Ekart 🛒",
-email:process.env.MAIL_FROM
-};
+        <p>If you did not request this email, ignore it.</p>
 
+        <br>
 
-sendSmtpEmail.to=[
-{
-email:email
-}
-];
+        <p>Regards,<br>Ekart Team</p>
 
+      </div>
+    `;
 
-sendSmtpEmail.htmlContent=`
+    const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
 
-<div style="font-family:Arial">
-
-<h2>
-Ekart Password Reset 🛒
-</h2>
-
-
-<p>Your OTP is:</p>
-
-
-<h1 style="
-color:#ec4899;
-letter-spacing:5px;
-font-size:35px;
-">
-
-${otp}
-
-</h1>
-
-
-<p>
-This OTP is valid for 10 minutes.
-</p>
-
-
-<p>
-Regards,<br>
-Ekart Team
-</p>
-
-
-</div>
-
-`;
-
-
-const result =
-await apiInstance.sendTransacEmail(sendSmtpEmail);
-
-
-console.log(
-"OTP SENT SUCCESS:",
-result.body
-);
-
-
-}
-catch(error){
-
-console.log(
-"OTP MAIL ERROR:",
-error.response?.body || error.message
-);
-
-
-throw error;
-
-}
-
-
+    console.log("✅ OTP SENT", result.body);
+  } catch (error) {
+    console.log(
+      "OTP MAIL ERROR:",
+      error.response?.body || error.message
+    );
+    throw error;
+  }
 };

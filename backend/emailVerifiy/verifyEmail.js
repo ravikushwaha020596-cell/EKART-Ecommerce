@@ -1,44 +1,120 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import "dotenv/config";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
+});
+
+
+// SMTP TEST
+transporter.verify((error, success) => {
+
+  if (error) {
+    console.log("SMTP ERROR:", error);
+  } else {
+    console.log("SMTP SERVER READY");
+  }
+
+});
+
 
 export const verifyEmail = async (token, email) => {
+
   try {
 
     const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
 
+
     console.log("FINAL VERIFY URL:", verifyUrl);
     console.log("SEND TO:", email);
 
-    const result = await resend.emails.send({
-      from: "Ekart <onboarding@resend.dev>",
+
+    const mailResponse = await transporter.sendMail({
+
+      from: `"Ekart" <${process.env.MAIL_USER}>`,
+
       to: email,
-      subject: "Email Verification",
+
+      subject: "Email Verification - Ekart",
+
 
       html: `
-        <h2>Welcome to Ekart</h2>
 
-        <p>Click below to verify your email</p>
+        <div style="
+          font-family: Arial;
+          padding:20px;
+        ">
 
-        <a href="${verifyUrl}">
-          Verify Email
-        </a>
+          <h2 style="color:#ec4899;">
+            Welcome to Ekart
+          </h2>
 
-        <br/><br/>
 
-        <p>${verifyUrl}</p>
+          <p>
+            Thank you for creating an account with Ekart.
+          </p>
+
+
+          <p>
+            Click the button below to verify your email.
+          </p>
+
+
+          <a href="${verifyUrl}"
+          style="
+            display:inline-block;
+            padding:12px 25px;
+            background:#ec4899;
+            color:white;
+            text-decoration:none;
+            border-radius:5px;
+          ">
+            Verify Email
+          </a>
+
+
+          <br/><br/>
+
+
+          <p>
+            If the button does not work, copy this link:
+          </p>
+
+
+          <p>
+            ${verifyUrl}
+          </p>
+
+
+          <p>
+            This verification link will expire soon.
+          </p>
+
+
+        </div>
+
       `,
     });
 
-    console.log("RESEND RESULT:", result);
+
+    console.log("MAIL SENT:", mailResponse.messageId);
 
     console.log("Verification Email Sent Successfully");
 
+
   } catch(error) {
+
 
     console.log("MAIL ERROR:", error);
 
     throw error;
+
   }
+
 };

@@ -2,7 +2,10 @@ import nodemailer from "nodemailer";
 import "dotenv/config";
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  family: 4,
   auth: {
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
@@ -20,7 +23,6 @@ transporter.verify((error, success) => {
 
 export const verifyEmail = async (token, email) => {
   try {
-    // Debug
     console.log("========== EMAIL DEBUG ==========");
     console.log("MAIL_USER:", process.env.MAIL_USER);
     console.log("MAIL_PASS exists:", !!process.env.MAIL_PASS);

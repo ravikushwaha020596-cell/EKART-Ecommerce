@@ -1,11 +1,17 @@
 import nodemailer from "nodemailer";
+import dns from "dns";
 import "dotenv/config";
+
+dns.setDefaultResultOrder("ipv4first");
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
   secure: false,
-  family: 4,
+  requireTLS: true,
+  connectionTimeout: 30000,
+  greetingTimeout: 30000,
+  socketTimeout: 30000,
   auth: {
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
@@ -43,9 +49,10 @@ export const verifyEmail = async (token, email) => {
 
         <a href="${verifyUrl}"
         style="
+          display:inline-block;
           padding:10px 20px;
           background:#ec4899;
-          color:white;
+          color:#ffffff;
           text-decoration:none;
           border-radius:5px;
         ">
@@ -54,9 +61,7 @@ export const verifyEmail = async (token, email) => {
 
         <br><br>
 
-        <p>
-          If the button doesn't work, copy and paste this link into your browser:
-        </p>
+        <p>If the button doesn't work, copy and paste this link into your browser:</p>
 
         <a href="${verifyUrl}">
           ${verifyUrl}

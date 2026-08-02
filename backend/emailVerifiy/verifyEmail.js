@@ -5,7 +5,6 @@ const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
   secure: false,
-  family: 4,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -17,7 +16,7 @@ transporter.verify((error, success) => {
   if (error) {
     console.error("SMTP Verify Error:", error);
   } else {
-    console.log("SMTP Server is ready to send emails");
+    console.log("✅ SMTP Server is ready to send emails");
   }
 });
 
@@ -35,26 +34,24 @@ export const verifyEmail = async (token, email) => {
 
         <p>Thank you for registering with Ekart.</p>
 
-        <p>Click below to verify your email:</p>
+        <p>Click the button below to verify your email:</p>
 
         <a href="${verifyUrl}"
-        style="
-          display:inline-block;
-          padding:10px 20px;
-          background:#ec4899;
-          color:white;
-          text-decoration:none;
-          border-radius:5px;
-          font-weight:bold;
-        ">
+          style="
+            display:inline-block;
+            padding:12px 22px;
+            background:#ec4899;
+            color:#ffffff;
+            text-decoration:none;
+            border-radius:6px;
+            font-weight:bold;
+          ">
           Verify Email
         </a>
 
         <br><br>
 
-        <p>
-          If the button doesn't work, copy and paste this link into your browser:
-        </p>
+        <p>If the button doesn't work, copy this link:</p>
 
         <a href="${verifyUrl}">
           ${verifyUrl}
@@ -62,16 +59,13 @@ export const verifyEmail = async (token, email) => {
 
         <br><br>
 
-        <p>
-          Regards,<br>
-          Ekart Team
-        </p>
+        <p>Regards,<br>Ekart Team</p>
       `,
     });
 
-    console.log("Verification Email Sent Successfully");
+    console.log("✅ Verification Email Sent Successfully");
   } catch (error) {
-    console.log("MAIL ERROR:", error);
+    console.error("MAIL ERROR:", error);
     throw error;
   }
 };

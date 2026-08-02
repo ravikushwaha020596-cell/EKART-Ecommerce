@@ -5,7 +5,6 @@ const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
   secure: false,
-  family: 4,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -17,7 +16,7 @@ transporter.verify((error, success) => {
   if (error) {
     console.error("SMTP Verify Error:", error);
   } else {
-    console.log("SMTP Server is ready to send emails");
+    console.log("✅ SMTP Server is ready to send emails");
   }
 });
 
@@ -35,9 +34,7 @@ export const sendOTPMail = async (otp, email) => {
 
         <h1>${otp}</h1>
 
-        <p>
-          This OTP is valid for 10 minutes.
-        </p>
+        <p>This OTP is valid for 10 minutes.</p>
 
         <p>
           If you did not request this password reset, please ignore this email.
@@ -45,16 +42,13 @@ export const sendOTPMail = async (otp, email) => {
 
         <br>
 
-        <p>
-          Regards,<br>
-          Ekart Team
-        </p>
+        <p>Regards,<br>Ekart Team</p>
       `,
     });
 
-    console.log("OTP Email Sent Successfully");
+    console.log("✅ OTP Email Sent Successfully");
   } catch (error) {
-    console.log("OTP MAIL ERROR:", error);
+    console.error("OTP MAIL ERROR:", error);
     throw error;
   }
 };

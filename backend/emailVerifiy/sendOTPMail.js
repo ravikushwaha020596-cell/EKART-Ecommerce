@@ -32,9 +32,16 @@ export const sendOTPMail = async (otp, email) => {
 
         <p>Your OTP for password reset is:</p>
 
-        <h1>${otp}</h1>
+        <h1
+          style="
+            color:#ec4899;
+            letter-spacing:4px;
+          "
+        >
+          ${otp}
+        </h1>
 
-        <p>This OTP is valid for 10 minutes.</p>
+        <p>This OTP is valid for <strong>10 minutes</strong>.</p>
 
         <p>
           If you did not request this password reset, please ignore this email.

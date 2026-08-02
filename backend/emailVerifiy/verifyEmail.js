@@ -4,7 +4,11 @@ import "dotenv/config";
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
-  secure: false,
+  secure: false, // Port 587 ke liye
+  requireTLS: true,
+  connectionTimeout: 30000,
+  greetingTimeout: 30000,
+  socketTimeout: 30000,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -12,7 +16,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // SMTP Connection Test
-transporter.verify((error, success) => {
+transporter.verify((error) => {
   if (error) {
     console.error("SMTP Verify Error:", error);
   } else {
@@ -28,7 +32,6 @@ export const verifyEmail = async (token, email) => {
       from: `"Ekart" <${process.env.MAIL_FROM}>`,
       to: email,
       subject: "Email Verification",
-
       html: `
         <h2>Welcome to Ekart 🛒</h2>
 

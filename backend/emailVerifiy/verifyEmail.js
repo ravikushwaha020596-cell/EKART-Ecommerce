@@ -1,17 +1,16 @@
 import nodemailer from "nodemailer";
 import "dotenv/config";
 
+
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",        
-  port: 587,                     
-  secure: false,                 
-  family: 4,                     
+  host: process.env.SMTP_HOST,          // Brevo SMTP
+  port: Number(process.env.SMTP_PORT),  // 587
+  secure: false,
   auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 });
-
 
 
 export const verifyEmail = async (token, email) => {
@@ -20,8 +19,11 @@ export const verifyEmail = async (token, email) => {
     const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
 
     await transporter.sendMail({
-      from: `"Ekart" <${process.env.MAIL_USER}>`,
+
+      from: `"Ekart" <${process.env.MAIL_FROM}>`,
+
       to: email,
+
       subject: "Email Verification",
 
       html: `
@@ -31,6 +33,7 @@ export const verifyEmail = async (token, email) => {
 
         <a href="${verifyUrl}" 
         style="
+        display:inline-block;
         padding:10px 20px;
         background:#ec4899;
         color:white;
@@ -54,6 +57,7 @@ export const verifyEmail = async (token, email) => {
 
 
     console.log("Verification Email Sent Successfully");
+
 
   } catch (error) {
 

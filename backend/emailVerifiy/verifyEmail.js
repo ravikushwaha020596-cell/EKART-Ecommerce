@@ -1,93 +1,100 @@
-import nodemailer from "nodemailer";
+import Brevo from "@getbrevo/brevo";
 import "dotenv/config";
 
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
 
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-
-  requireTLS: true,
-});
+const apiInstance = new Brevo.TransactionalEmailsApi();
 
 
-export const verifyEmail = async (token, email) => {
-  try {
-
-    const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
-
-    const info = await transporter.sendMail({
-
-      from: `"Ekart 🛒" <${process.env.MAIL_FROM}>`,
-
-      to: email,
-
-      subject: "Verify Your Ekart Account",
-
-      html: `
-      <div style="font-family:Arial">
-
-        <h2>Welcome to Ekart 🛒</h2>
-
-        <p>
-        Thank you for registering with Ekart.
-        </p>
-
-        <p>
-        Click below to verify your email:
-        </p>
-
-        <a href="${verifyUrl}"
-        style="
-        background:#ec4899;
-        color:white;
-        padding:12px 20px;
-        border-radius:6px;
-        text-decoration:none;
-        display:inline-block;
-        ">
-        Verify Email
-        </a>
-
-        <br/><br/>
-
-        <p>
-        Or copy this link:
-        </p>
-
-        <a href="${verifyUrl}">
-        ${verifyUrl}
-        </a>
-
-        <br/><br/>
-
-        <p>
-        Regards,<br>
-        Ekart Team
-        </p>
-
-      </div>
-      `
-    });
+apiInstance.setApiKey(
+Brevo.TransactionalEmailsApiApiKeys.apiKey,
+process.env.BREVO_API_KEY
+);
 
 
-    console.log(
-      "✅ Verification Email Sent:",
-      info.messageId
-    );
+
+export const verifyEmail = async(token,email)=>{
 
 
-  } catch(error){
+try{
 
-    console.error(
-      "VERIFY EMAIL ERROR:",
-      error.message
-    );
 
-    throw error;
-  }
+const mail = new Brevo.SendSmtpEmail();
+
+
+const verifyUrl =
+`${process.env.CLIENT_URL}/verify/${token}`;
+
+
+
+mail.subject =
+"Verify Your Ekart Account";
+
+
+
+mail.sender={
+name:"Ekart 🛒",
+email:process.env.MAIL_FROM
+};
+
+
+
+mail.to=[
+{
+email
+}
+];
+
+
+
+mail.htmlContent=`
+
+<h2>
+Welcome to Ekart 🛒
+</h2>
+
+
+<p>
+Click below to verify your email
+</p>
+
+
+<a href="${verifyUrl}">
+Verify Email
+</a>
+
+
+<br><br>
+
+${verifyUrl}
+
+
+`;
+
+
+
+const result =
+await apiInstance.sendTransacEmail(mail);
+
+
+console.log(
+"VERIFY EMAIL SENT",
+result.body
+);
+
+
+}
+
+catch(error){
+
+console.log(
+"VERIFY MAIL ERROR",
+error.response?.body || error.message
+);
+
+
+throw error;
+
+}
+
+
 };

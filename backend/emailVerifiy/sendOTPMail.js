@@ -1,80 +1,147 @@
 import nodemailer from "nodemailer";
 import "dotenv/config";
 
+
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: false,
 
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+  host: "smtp-relay.brevo.com",
+
+  port: 587,
+
+  secure:false,
+
+
+  auth:{
+    user:process.env.SMTP_USER,
+    pass:process.env.SMTP_PASS
   },
 
-  tls: {
-    rejectUnauthorized: false,
-  },
 
-  connectionTimeout: 30000,
-  greetingTimeout: 30000,
-  socketTimeout: 30000,
-});
+  requireTLS:true,
 
-// SMTP Connection Test
-transporter.verify((error) => {
-  if (error) {
-    console.error("SMTP Verify Error:", error);
-  } else {
-    console.log("✅ SMTP Server is ready to send emails");
-  }
 });
 
 
-export const sendOTPMail = async (otp, email) => {
-  try {
-    await transporter.sendMail({
-      from: `"Ekart" <${process.env.MAIL_FROM}>`,
-      to: email,
-      subject: "Password Reset OTP",
 
-      html: `
-        <h2>Ekart Password Reset 🛒</h2>
+// SMTP Test
 
-        <p>Your OTP for password reset is:</p>
+transporter.verify((error)=>{
 
-        <h1
-          style="
-            color:#ec4899;
-            letter-spacing:4px;
-            font-size:32px;
-          "
-        >
-          ${otp}
-        </h1>
+  if(error){
 
-        <p>
-          This OTP is valid for 
-          <strong>10 minutes</strong>.
-        </p>
+    console.error(
+      "SMTP Connection Failed:",
+      error.message
+    );
 
-        <p>
-          If you did not request this password reset,
-          please ignore this email.
-        </p>
-
-        <br>
-
-        <p>
-          Regards,<br>
-          Ekart Team
-        </p>
-      `,
-    });
-
-    console.log("✅ OTP Email Sent Successfully");
-
-  } catch (error) {
-    console.error("OTP MAIL ERROR:", error);
-    throw error;
   }
+  else{
+
+    console.log(
+      "✅ Brevo SMTP Ready"
+    );
+
+  }
+
+});
+
+
+
+
+export const sendOTPMail = async(otp,email)=>{
+
+try{
+
+
+const info = await transporter.sendMail({
+
+from:
+`"Ekart 🛒" <${process.env.MAIL_FROM}>`,
+
+
+to:email,
+
+
+subject:"Ekart Password Reset OTP",
+
+
+
+html:`
+
+<div style="font-family:Arial">
+
+
+<h2>
+Ekart Password Reset 🛒
+</h2>
+
+
+<p>
+Your OTP is:
+</p>
+
+
+<h1 style="
+color:#ec4899;
+letter-spacing:5px;
+font-size:35px;
+">
+
+${otp}
+
+</h1>
+
+
+
+<p>
+This OTP is valid for 
+<b>10 minutes</b>.
+</p>
+
+
+
+<p>
+If you did not request this,
+ignore this email.
+</p>
+
+
+
+<br>
+
+
+<p>
+Regards,<br>
+Ekart Team
+</p>
+
+
+</div>
+
+`
+
+});
+
+
+console.log(
+"✅ OTP Email Sent:",
+info.messageId
+);
+
+
+
+}catch(error){
+
+
+console.error(
+"OTP MAIL ERROR:",
+error.message
+);
+
+
+throw error;
+
+
+}
+
 };

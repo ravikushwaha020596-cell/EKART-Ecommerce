@@ -9,10 +9,17 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// 👇 Yahan add karo
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("SMTP VERIFY ERROR:", error);
+  } else {
+    console.log("SMTP READY");
+  }
+});
 
 export const verifyEmail = async (token, email) => {
   try {
-
     const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
 
     await transporter.sendMail({
@@ -25,7 +32,7 @@ export const verifyEmail = async (token, email) => {
 
         <p>Click below to verify your email</p>
 
-        <a href="${verifyUrl}" 
+        <a href="${verifyUrl}"
         style="
         padding:10px 20px;
         background:#ec4899;
@@ -48,13 +55,9 @@ export const verifyEmail = async (token, email) => {
       `,
     });
 
-
     console.log("Verification Email Sent Successfully");
-
   } catch (error) {
-
     console.log("MAIL ERROR:", error);
-
     throw error;
   }
 };

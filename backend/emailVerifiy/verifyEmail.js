@@ -3,90 +3,78 @@ import "dotenv/config";
 
 
 const transporter = nodemailer.createTransport({
-
-  host: "smtp.gmail.com",
-
-  port: 587,
-
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
   secure: false,
-
-  requireTLS: true,
-
   family: 4,
-
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-
   auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  }
-
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
 });
 
 
 export const verifyEmail = async (token, email) => {
-
   try {
 
-    const verifyUrl =
-      `${process.env.CLIENT_URL}/verify/${token}`;
-
-
-    console.log("VERIFY URL:", verifyUrl);
-    console.log("SEND TO:", email);
+    const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
 
 
     await transporter.sendMail({
 
-      from: `"Ekart" <${process.env.MAIL_USER}>`,
+      from: `"Ekart" <${process.env.MAIL_FROM}>`,
 
       to: email,
 
       subject: "Email Verification",
 
       html: `
+        <h2>Welcome to Ekart 🛒</h2>
 
-        <h2>Welcome to Ekart</h2>
+        <p>Thank you for registering with Ekart.</p>
 
-        <p>Click below to verify your email</p>
+        <p>Click below to verify your email:</p>
 
-
-        <a href="${verifyUrl}"
+        <a href="${verifyUrl}" 
         style="
-        display:inline-block;
-        padding:10px 20px;
-        background:#ec4899;
-        color:white;
-        text-decoration:none;
-        border-radius:5px;
+          display:inline-block;
+          padding:10px 20px;
+          background:#ec4899;
+          color:white;
+          text-decoration:none;
+          border-radius:5px;
+          font-weight:bold;
         ">
           Verify Email
         </a>
 
+        <br><br>
 
-        <br/><br/>
+        <p>
+          If the button doesn't work, copy and paste this link into your browser:
+        </p>
 
+        <a href="${verifyUrl}">
+          ${verifyUrl}
+        </a>
 
-        <p>If button is not working, open this link:</p>
+        <br><br>
 
-        <p>${verifyUrl}</p>
-
-      `
-
+        <p>
+          Regards,<br>
+          Ekart Team
+        </p>
+      `,
     });
 
 
     console.log("Verification Email Sent Successfully");
 
+  } catch (error) {
 
-  } catch(error) {
-
-    console.log("VERIFY EMAIL ERROR:", error.message);
+    console.log("MAIL ERROR:", error);
 
     throw error;
 
   }
-
 };

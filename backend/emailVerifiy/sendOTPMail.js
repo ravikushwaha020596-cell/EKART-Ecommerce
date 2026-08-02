@@ -3,26 +3,14 @@ import "dotenv/config";
 
 
 const transporter = nodemailer.createTransport({
-
-  host: "smtp.gmail.com",
-
-  port: 587,
-
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
   secure: false,
-
-  requireTLS: true,
-
   family: 4,
-
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-
   auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  }
-
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
 });
 
 
@@ -30,38 +18,45 @@ export const sendOTPMail = async (otp, email) => {
 
   try {
 
-    console.log("OTP SEND TO:", email);
-
-
     await transporter.sendMail({
 
-      from: `"Ekart" <${process.env.MAIL_USER}>`,
+      from: `"Ekart" <${process.env.MAIL_FROM}>`,
 
       to: email,
 
       subject: "Password Reset OTP",
 
       html: `
+        <h2>Ekart Password Reset</h2>
 
-        <h2>Password Reset</h2>
-
-        <p>Your OTP is:</p>
+        <p>Your OTP for password reset is:</p>
 
         <h1>${otp}</h1>
 
-        <p>This OTP is valid for 10 minutes.</p>
+        <p>
+          This OTP is valid for 10 minutes.
+        </p>
 
-      `
+        <p>
+          If you did not request this password reset, please ignore this email.
+        </p>
 
+        <br>
+
+        <p>
+          Regards,<br>
+          Ekart Team
+        </p>
+      `,
     });
 
 
-    console.log("OTP Sent Successfully");
+    console.log("OTP Email Sent Successfully");
 
 
-  } catch(error) {
+  } catch (error) {
 
-    console.log("OTP MAIL ERROR:", error.message);
+    console.log("OTP MAIL ERROR:", error);
 
     throw error;
 

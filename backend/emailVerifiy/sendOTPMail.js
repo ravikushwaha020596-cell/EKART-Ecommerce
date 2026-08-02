@@ -1,17 +1,18 @@
 import nodemailer from "nodemailer";
-import dns from "dns";
 import "dotenv/config";
-
-dns.setDefaultResultOrder("ipv4first");
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
   secure: false,
   requireTLS: true,
+
+  family: 4,
+
   connectionTimeout: 30000,
   greetingTimeout: 30000,
   socketTimeout: 30000,
+
   auth: {
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
@@ -27,29 +28,61 @@ transporter.verify((error) => {
   }
 });
 
-export const sendOTPMail = async (otp, email) => {
+export const verifyEmail = async (token, email) => {
   try {
-    console.log("========== OTP EMAIL DEBUG ==========");
+
+    console.log("========== EMAIL DEBUG ==========");
     console.log("MAIL_USER:", process.env.MAIL_USER);
     console.log("MAIL_PASS exists:", !!process.env.MAIL_PASS);
-    console.log("Sending OTP To:", email);
-    console.log("=====================================");
+    console.log("CLIENT_URL:", process.env.CLIENT_URL);
+    console.log("Sending To:", email);
+    console.log("================================");
+
+    const verifyUrl = `${process.env.CLIENT_URL}/verify/${token}`;
 
     await transporter.sendMail({
+
       from: `"Ekart" <${process.env.MAIL_USER}>`,
+
       to: email,
-      subject: "Password Reset OTP",
+
+      subject: "Email Verification",
+
       html: `
-        <h2>Password Reset</h2>
-        <p>Your OTP is:</p>
-        <h1>${otp}</h1>
-        <p>This OTP is valid for 10 minutes.</p>
+        <h2>Welcome to Ekart</h2>
+
+        <p>Click below to verify your email</p>
+
+        <a href="${verifyUrl}"
+        style="
+          display:inline-block;
+          padding:10px 20px;
+          background:#ec4899;
+          color:white;
+          text-decoration:none;
+          border-radius:5px;
+        ">
+          Verify Email
+        </a>
+
+        <br><br>
+
+        <p>
+          If the button doesn't work, copy and paste this link into your browser:
+        </p>
+
+        <a href="${verifyUrl}">
+          ${verifyUrl}
+        </a>
       `,
     });
 
-    console.log("OTP Email Sent Successfully");
+    console.log("Verification Email Sent Successfully");
+
   } catch (error) {
-    console.error("OTP MAIL ERROR:", error);
+
+    console.error("MAIL ERROR:", error);
+
     throw error;
   }
 };

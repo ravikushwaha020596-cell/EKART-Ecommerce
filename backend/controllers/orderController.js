@@ -66,6 +66,7 @@ export const createOrder = async (req, res) => {
 
 export const VerifyPayment = async (req, res) => {
   try {
+    console.log("BODY:", req.body);
     const {
       razorpay_order_id,
       razorpay_payment_id,
@@ -73,6 +74,10 @@ export const VerifyPayment = async (req, res) => {
       paymentFailed,
     } = req.body;
     
+    console.log("ORDER ID:", razorpay_order_id);
+    console.log("PAYMENT ID:", razorpay_payment_id);
+    console.log("SIGNATURE:", razorpay_signature);
+
     if (!razorpay_order_id) {
       return res.status(400).json({
         success: false,
@@ -108,6 +113,9 @@ const sign = `${razorpay_order_id}|${razorpay_payment_id}`;
       .createHmac("sha256", process.env.RAZORPAY_SECRET)
       .update(sign)
       .digest("hex");
+
+console.log("EXPECTED:", expectedSignature);
+console.log("RECEIVED:", razorpay_signature);
 
       if (expectedSignature !== razorpay_signature) {
       await Order.findOneAndUpdate(

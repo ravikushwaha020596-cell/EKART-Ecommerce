@@ -51,67 +51,98 @@ const AddressForm = () => {
   const shipping = subtotal > 299 ? 0 : 10;
   const tax = parseFloat((subtotal * 0.05).toFixed(2));
   const total = subtotal + shipping + tax;
+const handlePayment = async () => {
+  const accessToken = localStorage.getItem("accessToken");
 
-  const handlePayment = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-    try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_URL}/api/v1/orders/create-order`,
-        {
-          products: cart?.items?.map((items) => ({
-            productId: items.productId._id,
-            quantity: items.quantity,
-          })),
-          tax,
-          shipping,
-          amount: total,
-          currency: "INR",
+  try {
+    const { data } = await axios.post(
+      `${import.meta.env.VITE_URL}/api/v1/orders/create-order`,
+      {
+        products: cart?.items?.map((items) => ({
+          productId: items.productId._id,
+          quantity: items.quantity,
+        })),
+        tax,
+        shipping,
+        amount: total,
+        currency: "INR",
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+      },
+    );
 
-      if (!data.success) return toast.error("Something went wrong");
+    if (!data.success) {
+      return toast.error("Something went wrong");
+    }
 
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: data.order.amount,
-        currency: data.order.currency,
-        order_id: data.order.id,
-        name: "Ekart",
-        handler: async function (response) {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: data.order.amount,
+      currency: data.order.currency,
+      order_id: data.order.id,
+      name: "Ekart",
+
+      handler: async function (response) {
+        try {
+          console.log("Razorpay Response:", response);
+
           const verifyRes = await axios.post(
             `${import.meta.env.VITE_URL}/api/v1/orders/verify-payment`,
-            response,
             {
-              headers: { Authorization: `Bearer ${accessToken}` },
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
             },
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
           );
+
+          console.log("Verify Response:", verifyRes.data);
+
           if (verifyRes.data.success) {
             toast.success("Payment Successful!");
             dispatch(setCart({ items: [], totalPrice: 0 }));
             navigate("/order-success");
+          } else {
+            toast.error("Payment Verification Failed");
           }
-        },
-        prefill: {
-          name: formData.fullName,
-          email: formData.email,
-          contact: formData.phone,
-        },
-        theme: { color: "#F472B6" },
-      };
-      if (!window.Razorpay) {
-        return toast.error("Razorpay SDK not loaded");
-      }
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Payment failed");
+        } catch (err) {
+          console.error("VERIFY ERROR:", err.response?.data || err);
+          toast.error(
+            err.response?.data?.message || "Payment Verification Failed"
+          );
+        }
+      },
+
+      prefill: {
+        name: formData.fullName,
+        email: formData.email,
+        contact: formData.phone,
+      },
+
+      theme: {
+        color: "#F472B6",
+      },
+    };
+
+    if (!window.Razorpay) {
+      return toast.error("Razorpay SDK not loaded");
     }
-  };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+
+  } catch (error) {
+    console.error(error);
+    toast.error(error.response?.data?.message || "Payment failed");
+  }
+};
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-10 py-6 mt-16 md:mt-20">
